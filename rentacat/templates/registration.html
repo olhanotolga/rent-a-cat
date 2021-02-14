@@ -1,0 +1,90 @@
+{% extends "layout.html" %}
+
+{% block maincontent %}
+
+{% include "./partials/header.html" %}
+
+<section>
+	<form method="POST" action="">
+		{{ form.hidden_tag() }}
+
+		<fieldset class="form-group">
+			<legend>Join the community!</legend>
+
+			<div class="form-group">
+				{{ form.username.label(class="form-label") }}
+
+				{% if form.username.errors %}
+					{{ form.username(class="form-feedback error")}}
+					<div class="form-feedback-error">
+						{% for error in form.username.errors %}
+							<span>{{ error }}</span>
+						{% endfor %}
+					</div>
+				{% else %}
+					{{ form.username(class="form-feedback")}}
+				{% endif %}
+			</div>
+
+			<div class="form-group">
+				{{ form.email.label(class="form-label") }}
+
+				{% if form.email.errors %}
+					{{ form.email(class="form-feedback error")}}
+					<div class="form-feedback-error">
+						{% for error in form.email.errors %}
+							<span>{{ error }}</span>
+						{% endfor %}
+					</div>
+				{% else %}
+					{{ form.email(class="form-feedback")}}
+				{% endif %}
+			</div>
+
+			<div class="form-group">
+				{{ form.password.label(class="form-label") }}
+
+				{% if form.password.errors %}
+					{{ form.password(class="form-feedback error") }}
+					<div class="form-feedback-error">
+						{% for error in form.password.errors %}
+							<span>{{ error }}</span>
+						{% endfor %}
+					</div>
+				{% else %}
+					{{ form.password(class="form-feedback") }}
+				{% endif %}
+			</div>
+
+			<div class="form-group">
+				{{ form.confirm_password.label(class="form-label") }}
+
+				{% if form.confirm_password.errors %}
+					{{ form.confirm_password(class="form-feedback error") }}
+					<div class="form-feedback-error">
+						{% for error in form.confirm_password.errors %}
+							<span>{{ error }}</span>
+						{% endfor %}
+					</div>
+				{% else %}
+					{{ form.confirm_password(class="form-feedback") }}
+				{% endif %}
+			</div>
+		</fieldset>
+
+		<div class="form-group">
+			{{ form.submit(class="submit-btn button") }}
+		</div>
+	</form>
+</section>
+
+<section>
+	<small>
+		Already with us?
+		<a href="{{ url_for('login') }}">Log in</a>
+	</small>
+</section>
+
+{% include "./partials/footer.html" %}
+
+{% endblock maincontent %}

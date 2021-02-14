@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	{% block title %}
+	{% if title %}
+	<title>Rent A Cat | {{title}}</title>
+	{% else %}
+	<title>Rent A Cat</title>
+	{% endif %}
+	{% endblock title %}
+
+	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='main.css')}}">
+</head>
+<body>
+	
+	{% with messages = get_flashed_messages(with_categories=true) %}
+		{% if messages %}
+			{% for category, message in messages %}
+				<div class="alert {{ category }}">
+					{{ message }}
+				</div>
+			{% endfor %}
+		{% endif %}
+	{% endwith %}
+
+	{% block maincontent %}{% endblock maincontent %}
+
+	
+</body>
+</html>
