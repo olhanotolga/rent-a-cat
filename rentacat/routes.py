@@ -37,6 +37,7 @@ def registration():
 def profile():
 	return render_template("profile.html", title="Your profile")
 
+# potentially: all updates as a list and map
 @app.route("/view")
 def view():
 	return render_template("view.html", title="View")
