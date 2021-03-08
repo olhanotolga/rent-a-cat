@@ -42,6 +42,10 @@ def profile():
 def view():
 	return render_template("view.html", title="View")
 
+@app.route("/terms")
+def terms():
+	return render_template("terms.html", title="Terms")
+
 @app.errorhandler(404)
 def page_not_found(error):
 	return render_template("notfound.html", title="Not found"), 404

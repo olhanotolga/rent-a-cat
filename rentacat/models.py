@@ -8,6 +8,7 @@ class UserTypes(enum.Enum):
 	Admin = 1
 	Regular = 2
 
+
 class User(db.Model):
 	__tablename__ = 'users'
 
@@ -34,20 +35,38 @@ class Profile(db.Model):
 	last_name = db.Column(db.String(25), nullable=False)
 	about = db.Column(db.Text)
 	address = db.Column(db.String(200), nullable=False)
+	# ! location / Geometry
+	location = db.Column()
 	phone_number = db.Column(db.Integer, nullable=False)
 	facebook_username = db.Column(db.String(50))
 	telegram_username = db.Column(db.String(32))
 	profile_image = db.Column(db.String(20), nullable=False, default='default.jpg')
 	user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
-	updates = db.relationship('Update', backref='author', lazy=True)
-
 	def __repr__(self):
 		return f"Profile('{self.first_name}', '{self.last_name}', '{self.profile_image}')"
 
 
-class Update(db.Model):
-	__tablename__ = 'updates'
+class CatKeeper(db.Model):
+	__tablename__ = 'cat_keepers'
+
+	id = db.Column(db.Integer, primary_key=True)
+	profile_id = db.Column(db.Integer, db.ForeignKey('profiles.id'), nullable=False)
+	
+	requests = db.relationship('Request', backref='cat_keeper', lazy=True)
+
+
+class CatSitter(db.Model):
+	__tablename__ = 'cat_sitters'
+
+	id = db.Column(db.Integer, primary_key=True)
+	profile_id = db.Column(db.Integer, db.ForeignKey('profiles.id'), nullable=False)
+
+	offers = db.relationship('Offers', backref='cat_sitter', lazy=True)
+
+
+class Request(db.Model):
+	__tablename__ = 'requests'
 
 	id = db.Column(db.Integer, primary_key=True)
 	title = db.Column(db.String(65))
@@ -58,12 +77,8 @@ class Update(db.Model):
 	start_date = db.Column(db.DateTime)
 	end_date = db.Column(db.DateTime)
 	published_on = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-	closed_on = db.Column(db.DateTime)
-	user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+	cat_keeper_id = db.Column(db.Integer, db.ForeignKey('cat_keepers.id'), nullable=False)
 
 	def __repr__(self):
-		return f"Update('{self.title}', '{self.published_on}')"
+		return f"Request('{self.title}', '{self.published_on}')"
 	
-
-# association table (for exchanges made between users):
-exchanges_table = db.Table('catsitting_exchanges', db.Model.metadata, db.Column('left_id', db.Integer, db.ForeignKey('profiles.id')), db.Column('right_id', db.Integer, db.ForeignKey('profiles.id')))
