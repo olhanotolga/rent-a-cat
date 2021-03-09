@@ -8,11 +8,11 @@
 	<form method="POST" action="">
 		{{ form.hidden_tag() }}
 
-		<fieldset class="form-group">
+		<fieldset>
 			<legend>Join the community!</legend>
 
 			<div class="form-group">
-				{{ form.username.label(class="form-label") }}
+				{{ form.username.label(class="form-label visually-hidden") }}
 
 				{% if form.username.errors %}
 					{{ form.username(class="form-feedback error")}}
@@ -22,12 +22,12 @@
 						{% endfor %}
 					</div>
 				{% else %}
-					{{ form.username(class="form-feedback")}}
+					{{ form.username(class="form-feedback", placeholder="username")}}
 				{% endif %}
 			</div>
 
 			<div class="form-group">
-				{{ form.email.label(class="form-label") }}
+				{{ form.email.label(class="form-label visually-hidden") }}
 
 				{% if form.email.errors %}
 					{{ form.email(class="form-feedback error")}}
@@ -37,12 +37,12 @@
 						{% endfor %}
 					</div>
 				{% else %}
-					{{ form.email(class="form-feedback")}}
+					{{ form.email(class="form-feedback", placeholder="your.email@email.com")}}
 				{% endif %}
 			</div>
 
 			<div class="form-group">
-				{{ form.password.label(class="form-label") }}
+				{{ form.password.label(class="form-label visually-hidden") }}
 
 				{% if form.password.errors %}
 					{{ form.password(class="form-feedback error") }}
@@ -52,12 +52,12 @@
 						{% endfor %}
 					</div>
 				{% else %}
-					{{ form.password(class="form-feedback") }}
+					{{ form.password(class="form-feedback", placeholder="password") }}
 				{% endif %}
 			</div>
 
 			<div class="form-group">
-				{{ form.confirm_password.label(class="form-label") }}
+				{{ form.confirm_password.label(class="form-label visually-hidden") }}
 
 				{% if form.confirm_password.errors %}
 					{{ form.confirm_password(class="form-feedback error") }}
@@ -67,8 +67,13 @@
 						{% endfor %}
 					</div>
 				{% else %}
-					{{ form.confirm_password(class="form-feedback") }}
+					{{ form.confirm_password(class="form-feedback", placeholder="confirm password") }}
 				{% endif %}
+			</div>
+
+			<div class="form-check">
+				{{ form.agree(class="form-check-input") }}
+				{{ form.agree.label(class="form-check-label")  }}
 			</div>
 		</fieldset>
 
@@ -82,6 +87,10 @@
 	<small>
 		Already with us?
 		<a href="{{ url_for('login') }}">Log in</a>
+	</small>
+	<small>
+		* Find 
+		<a href="{{ url_for('about') }}">our Terms in the About section</a>
 	</small>
 </section>
 

@@ -1,3 +1,46 @@
+:root {
+	/* primary */
+	--primary-100: #b4c5e4;
+	--primary-200: #93a1ba;
+	--primary-300: #737f94;
+	--primary-400: #534d56;
+	--primary-500: #463e4a;
+	/* secondary */
+	--secondary-100: #fae8a0;
+	--secondary-200: #eddd9a;
+	--secondary-300: #d1c38a;
+	--secondary-400: #c2b580;
+	--secondary-500: #a1935a;
+	/* tertiary */
+	--tertiary-100: #f7a072;
+	--tertiary-200: #e89b72;
+	--tertiary-300: #c99071;
+	--tertiary-400: #99725d;
+	--tertiary-500: #82614f;
+	/* success */
+	--success-100: #99f7ab;
+	--success-200: #81f495;
+	--success-300: #59d970;
+	/* warning */
+	--warning-100: #fec601;
+	--warning-200: #edbd11;
+	--warning-300: #b89928;
+	/* error */
+	--error-100: #f57133;
+	--error-200: #f2611d;
+	--error-300: #de5110;
+	/* neutral */
+	--neutral-100: #ffffff;
+	--neutral-200: #f4f6f7;
+	--neutral-300: #e1e1e1;
+	--neutral-400: #737581;
+	--neutral-500: #4a4b53;
+	--neutral-600: #000000;
+	/* text */
+	--text-color: #000000;
+	--text-color-inverted: #ffffff;
+}
+
 *,
 ::after,
 ::before {
@@ -12,11 +55,27 @@ body {
 }
 
 .success {
-	color: lightgreen;
+	color: var(--success-300);
+	border: 2px solid var(--success-100);
 }
-.danger {
-	color: coral;
+.warning {
+	color: var(--warning-300);
+	border: 2px solid var(--warning-100);
+}
+.error {
+	color: var(--error-300);
+	border: 2px solid var(--error-100);
 }
 .form-feedback-error {
-	color: firebrick;
+	color: var(--error-300);
+}
+
+.visually-hidden {
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	height: 1px;
+	overflow: hidden;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
 }
