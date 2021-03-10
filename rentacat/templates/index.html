@@ -3,20 +3,18 @@
 {% block maincontent %}
 
 <!-- welcome screen -->
-<header>
+<section class="landing-hero">
 	<img src="" alt="">
 	<h1>{{ h1 }}</h1>
 	<a href="{{ url_for('login') }}">Log in</a>
 	<a href="{{ url_for('registration') }}">Sign up</a>
 	<a href="#landingMain">Learn more</a>
 	<span>▽</span>
-</header>
+</section>
 
-<main id="landingMain">
-	<header>
-		<img src="" alt="" aria-hidden="true">
-		<h2>Join the community</h2>
-	</header>
+{% include "./partials/header.html" %}
+
+<main id="landingMain" class="page-content">
 	<section class="card feature">
 		<img src="" alt="">
 		<h3>Spend time in feline company</h3>

@@ -1,12 +1,36 @@
 <header>
-	<h1>{{h1}}</h1>
+	{% if not header_h2_only %}
+		<h1 class="visually-hidden">Rent a Cat: {{ h2 }}</h1>
+	{% endif %}
+	<img src="" alt="" aria-hidden="true">
+	<h2>{{ h2 }}</h2>
 
 	<nav>
 		<ul>
-			<li>Home</li>
-			<li>About</li>
-			<li>Search</li>
-			<li>Profile</li>
+			<li>
+				<a href="{{ url_for('index') }}">Home</a>
+			</li>
+			<li>
+				<a href="{{ url_for('about') }}">About</a>
+			</li>
+			<li>
+				<a href="{{ url_for('registration') }}">Signup</a>
+			</li>
+			<li>
+				<a href="{{ url_for('login') }}">Login</a>
+			</li>
+			<li>
+				<a href="{{ url_for('logout') }}">Logout</a>
+			</li>
+			<li>
+				<a href="{{ url_for('dashboard') }}">Dashboard</a>
+			</li>
+			<li>
+				<a href="{{ url_for('own_profile') }}">Profile</a>
+			</li>
+			<li>
+				<a href="{{ url_for('view') }}">View</a>
+			</li>
 		</ul>
 	</nav>
 </header>

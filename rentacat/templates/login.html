@@ -4,7 +4,7 @@
 
 {% include "./partials/header.html" %}
 
-<section>
+<main class="page-content">
 	<form method="POST" action="">
 		{{ form.hidden_tag() }}
 
@@ -55,14 +55,14 @@
 			<a href="#">Forgot password?</a>
 		</small>
 	</form>
-</section>
 
-<section>
-	<small>
-		Need an account?
-		<a href="{{ url_for('registration') }}">Sign up</a>
-	</small>
-</section>
+	<section>
+		<small>
+			Need an account?
+			<a href="{{ url_for('registration') }}">Sign up</a>
+		</small>
+	</section>
+</main>
 
 {% include "./partials/footer.html" %}
 

@@ -4,7 +4,7 @@
 
 {% include "./partials/header.html" %}
 
-<section>
+<main class="page-content">
 	<form method="POST" action="">
 		{{ form.hidden_tag() }}
 
@@ -81,18 +81,20 @@
 			{{ form.submit(class="submit-btn button") }}
 		</div>
 	</form>
-</section>
 
-<section>
-	<small>
-		Already with us?
-		<a href="{{ url_for('login') }}">Log in</a>
-	</small>
-	<small>
-		* Find 
-		<a href="{{ url_for('about') }}">our Terms in the About section</a>
-	</small>
-</section>
+
+	<section>
+		<small>
+			Already with us?
+			<a href="{{ url_for('login') }}">Log in</a>
+		</small>
+		<small>
+			* Find 
+			<a href="{{ url_for('about') }}">our Terms in the About section</a>
+		</small>
+	</section>
+
+</main>
 
 {% include "./partials/footer.html" %}
 

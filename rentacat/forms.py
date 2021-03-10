@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
-from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField
+from wtforms.fields.html5 import TelField
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, Regexp
 from flask_login import current_user
 from rentacat.models import User
 
@@ -19,9 +20,16 @@ class LoginForm(FlaskForm):
 	remember = BooleanField('Remember me')
 	submit = SubmitField('Log in')
 
+
 class UpdateProfileForm(FlaskForm):
 	username = StringField('Username', validators=[DataRequired(), Length(min=3, max=20)])
+	name = StringField('Name', validators=[DataRequired(), Length(min=3, max=50)])
 	email = StringField('Email', validators=[DataRequired(), Email()])
+	about = TextAreaField('About', validators=[Length(max=1000)])
+	address = StringField('Address (street/PLZ)', validators=[DataRequired(), Length(min=5, max=200)])
+	phone = TelField('Phone')
+	facebook = StringField('Facebook username', validators=[Length(max=50)])
+	telegram = StringField('Telegram username', validators=[Length(max=32)])
 	picture = FileField('Update Profile Picture', validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
 	submit = SubmitField('Update')
 
