@@ -25,8 +25,9 @@ class User(db.Model, UserMixin):
 	date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 	#? last login — update every time user logs in
 	last_login = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-
-	user_profile = db.relationship('Profile', backref='user', lazy=True)
+	
+	# profile_id = db.Column(db.Integer, db.ForeignKey('user_profile.id'), nullable=False)
+	profile = db.relationship('Profile', back_populates='user', uselist=False, lazy=True)
 
 	def __repr__(self):
 		return f"User('{self.username}', '{self.email}', type:{self.user_type})"
@@ -50,7 +51,12 @@ class Profile(db.Model):
 	facebook_username = db.Column(db.String(50))
 	telegram_username = db.Column(db.String(32))
 	profile_image = db.Column(db.String(20), nullable=False, default='default.jpg')
+	
 	user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+	user = db.relationship('User', back_populates='profile', lazy=True)
+	
+	cat_keeper = db.relationship('CatKeeper', back_populates='profile', uselist=False, lazy=True)
+	cat_sitter = db.relationship('CatSitter', back_populates='profile', uselist=False, lazy=True)
 
 	def __repr__(self):
 		return f"Profile('{self.name}', '{self.profile_image}')"
@@ -60,18 +66,23 @@ class CatKeeper(db.Model):
 	__tablename__ = 'cat_keepers'
 
 	id = db.Column(db.Integer, primary_key=True)
-	profile_id = db.Column(db.Integer, db.ForeignKey('profiles.id'), nullable=False)
 	
-	requests = db.relationship('Request', backref='cat_keeper', lazy=True)
+	profile_id = db.Column(db.Integer, db.ForeignKey('profiles.id'), nullable=False)
+	profile = db.relationship('Profile', back_populates='cat_keeper', uselist=False, lazy=True)
+	
+	#! sqlalchemy.exc.ArgumentError: Error creating backref 'cat_keeper' on relationship 'CatKeeper.requests': property of that name exists on mapper 'mapped class Request->requests'
+	requests = db.relationship('Request', back_populates='cat_keeper', lazy=True)
 
 
 class CatSitter(db.Model):
 	__tablename__ = 'cat_sitters'
 
 	id = db.Column(db.Integer, primary_key=True)
+	
 	profile_id = db.Column(db.Integer, db.ForeignKey('profiles.id'), nullable=False)
+	profile = db.relationship('Profile', back_populates='cat_sitter', uselist=False, lazy=True)
 
-	offers = db.relationship('Offer', backref='cat_sitter', lazy=True)
+	offers = db.relationship('Offer', back_populates='cat_sitter', lazy=True)
 
 
 class Request(db.Model):
@@ -86,7 +97,9 @@ class Request(db.Model):
 	start_date = db.Column(db.DateTime, nullable=False)
 	end_date = db.Column(db.DateTime, nullable=False)
 	published_on = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+	
 	cat_keeper_id = db.Column(db.Integer, db.ForeignKey('cat_keepers.id'), nullable=False)
+	cat_keeper = db.relationship('CatKeeper', back_populates='requests', lazy=True)
 
 	def __repr__(self):
 		return f"Request('{self.title}', '{self.published_on}')"
@@ -100,7 +113,9 @@ class Offer(db.Model):
 	start_date = db.Column(db.DateTime, nullable=False)
 	end_date = db.Column(db.DateTime, nullable=False)
 	published_on = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
 	cat_sitter_id = db.Column(db.Integer, db.ForeignKey('cat_sitters.id'), nullable=False)
+	cat_sitter = db.relationship('CatSitter', back_populates='offers', lazy=True)
 
 	def __repr__(self):
 		return f"Offer('{self.title}', '{self.published_on}')"

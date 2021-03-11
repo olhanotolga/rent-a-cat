@@ -11,6 +11,12 @@ from rentacat.models import User, Profile, CatSitter, CatKeeper, Request
 # user_2 = User(username='olha', email='olha@rac.com', password='12345qwerty')
 # db.session.add(user_2)
 
+# user_3 = User(username='third', email='third.user@email.com', password='thirduser')
+# db.session.add(user_3)
+
+# user_4 = User(username='ohh', email='test@test.com', password='testtest')
+# db.session.add(user_4)
+
 # db.session.commit()
 
 User.query.all()

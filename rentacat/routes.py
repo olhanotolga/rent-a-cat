@@ -84,6 +84,8 @@ def logout():
 @app.route("/dashboard")
 @login_required
 def dashboard():
+	# ! show if profile has been created,
+	# ! otherwise: send to create_profile
 	username = current_user.username
 	return render_template("dashboard.html", title="Dashboard", h2=f"{username}'s Dashboard")
 
@@ -91,6 +93,8 @@ def dashboard():
 @app.route("/profile")
 @login_required
 def own_profile():
+	# ! show if there is profile,
+	# ! otherwise: render create profile page
 	# first name + last name
 	# username
 	username = current_user.username
@@ -107,6 +111,8 @@ def own_profile():
 @app.route("/profile/update", methods=['GET', 'POST'])
 @login_required
 def update_profile():
+	# ! show only if there is a profile to update!
+	# ! otherwise: show create profile page (new route/same template with conditional rendering)
 	form = UpdateProfileForm()
 	if form.validate_on_submit():
 		
@@ -151,8 +157,8 @@ def update_profile():
 			form.name.data = current_user.username
 			form.address.data = "Berlin, Germany"
 			
-			current_user.user_profile.name = current_user.username
-			current_user.user_profile.address = "Berlin, Germany"
+			current_user.profile.name = current_user.username
+			current_user.profile.address = "Berlin, Germany"
 
 	profile = Profile.query.filter_by(user_id=current_user.id).first()	
 	if profile:
