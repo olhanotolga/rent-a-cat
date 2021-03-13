@@ -6,7 +6,7 @@ from flask_login import login_required, current_user, login_user, logout_user
 from PIL import Image
 from rentacat import app, db, bcrypt
 from rentacat.forms import RegistrationForm, LoginForm, UpdateProfileForm
-from rentacat.models import User, Profile
+from rentacat.models import User, Profile, CatKeeper, CatSitter, Request, Offer
 
 
 def save_image(form_picture):
@@ -75,106 +75,176 @@ def login():
 	return render_template("login.html", title="Log in", form=form, h2="Log in")
 
 
+@app.route("/dashboard")
+@login_required
+def dashboard():
+	profile_types = ['Cat Keeper', 'Cat Sitter']
+
+	# show if profile has been created,
+	# otherwise: send to create_profile
+	if not current_user.profile:
+			return redirect(url_for('create_profile'))
+	
+	profile_image=current_user.profile.profile_image
+	username = current_user.username
+	profile = current_user.profile.name
+	
+	requests = current_user.profile.cat_keeper.requests
+	offers = current_user.profile.cat_sitter.offers
+
+	# user = User.query.filter_by(username=username).first_or_404()
+	# posts = Post.query.filter_by(author=user)\
+	# 	.order_by(Post.date_posted.desc())\
+	# 	.paginate(page=page, per_page=7)
+	
+	# requests = Request.query.filter_by(cat_keeper=).order_by(Request.date_posted.desc())
+	# offers = Offer.query.filter_by(cat_sitter=).order_by(Offer.date_posted.desc())
+
+	return render_template("dashboard.html", title="Dashboard", h2=f"{username}'s Dashboard", types=profile_types, profile=profile, username=username, profile_image=profile_image, requests=requests, offers=offers)
+
+
+@app.route("/profile/create", methods=['GET', 'POST'])
+@login_required
+def create_profile():
+	# ! show only if there is no profile!
+	# ! otherwise: show create profile page (new route/same template with conditional rendering)
+	form = UpdateProfileForm()
+	if form.validate_on_submit():
+		profile = Profile(name=form.name.data, about=form.about.data, address=form.address.data, phone_number=form.phone.data, facebook_username=form.facebook.data, telegram_username=form.telegram.data, user_id=current_user.id)
+		db.session.add(profile)
+		db.session.commit()
+
+		#! create Cat Keeper & Cat Sitter
+		cat_keeper = CatKeeper(profile_id=Profile.query.filter_by(user_id=current_user.id).first().id)
+		cat_sitter = CatSitter(profile_id=Profile.query.filter_by(user_id=current_user.id).first().id)
+		db.session.add(cat_keeper)
+		db.session.add(cat_sitter)
+		db.session.commit()
+
+		if form.picture.data:
+			picture_file = save_image(form.picture.data)
+			current_user.profile.profile_image = picture_file
+			db.session.commit()
+
+		# ! location / Geometry
+		# location = db.Column(Geometry("POINT", srid=SpatialConstants.SRID, dimension=2, management=True))
+		
+		flash('Your profile has been created', 'success')
+		return redirect(url_for('dashboard'))
+
+	elif request.method == 'GET':
+		form.username.data = current_user.username
+		form.email.data = current_user.email
+		
+		picture_file = url_for('static', filename='profile_pics/default.jpg')
+	
+	return render_template("update_profile.html", title="Create profile", h2="Create profile", username=current_user.username, email=current_user.email, profile_image=picture_file, form=form)
+
+
 @app.route('/logout')
 def logout():
 	logout_user()
 	return redirect(url_for('login'))
 
 
-@app.route("/dashboard")
-@login_required
-def dashboard():
-	# ! show if profile has been created,
-	# ! otherwise: send to create_profile
-	username = current_user.username
-	return render_template("dashboard.html", title="Dashboard", h2=f"{username}'s Dashboard")
+
+# *** LEAVE FOR NOW!!! *** ↓↓↓
+# !!! LEAVE FOR NOW!!! *** ↓↓↓
+# *** LEAVE FOR NOW!!! *** ↓↓↓
+# !!! LEAVE FOR NOW!!! *** ↓↓↓
+# *** LEAVE FOR NOW!!! *** ↓↓↓
+
+# @app.route("/profile")
+# @login_required
+# def own_profile():
+# 	# ! show if there is profile,
+# 	# ! otherwise: render create_profile page
+# 	# first name + last name
+# 	# username
+# 	username = current_user.username
+# 	# email
+# 	# address
+# 	# phone number
+# 	# facebook username
+# 	# telegram username
+# 	# about
+
+# 	return render_template("profile.html", title="Your profile", h2=f"{username}'s Profile")
 
 
-@app.route("/profile")
-@login_required
-def own_profile():
-	# ! show if there is profile,
-	# ! otherwise: render create profile page
-	# first name + last name
-	# username
-	username = current_user.username
-	# email
-	# address
-	# phone number
-	# facebook username
-	# telegram username
-	# about
+# *** LEAVE FOR NOW!!! *** ↓↓↓
+# !!! LEAVE FOR NOW!!! *** ↓↓↓
+# *** LEAVE FOR NOW!!! *** ↓↓↓
+# !!! LEAVE FOR NOW!!! *** ↓↓↓
+# *** LEAVE FOR NOW!!! *** ↓↓↓
 
-	return render_template("profile.html", title="Your profile", h2=f"{username}'s Profile")
-
-
-@app.route("/profile/update", methods=['GET', 'POST'])
-@login_required
-def update_profile():
-	# ! show only if there is a profile to update!
-	# ! otherwise: show create profile page (new route/same template with conditional rendering)
-	form = UpdateProfileForm()
-	if form.validate_on_submit():
+# @app.route("/profile/update", methods=['GET', 'POST'])
+# @login_required
+# def update_profile():
+# 	# ! show only if there is a profile to update!
+# 	# ! otherwise: show create profile page (new route/same template with conditional rendering)
+# 	form = UpdateProfileForm()
+# 	if form.validate_on_submit():
 		
-		profile = Profile(name=form.name.data, about=form.about.data, address=form.address.data, phone_number=form.phone.data, facebook_username=form.facebook.data, telegram_username=form.telegram.data, user_id=current_user.id)
-		db.session.add(profile)
-		db.session.commit()
+# 		profile = Profile(name=form.name.data, about=form.about.data, address=form.address.data, phone_number=form.phone.data, facebook_username=form.facebook.data, telegram_username=form.telegram.data, user_id=current_user.id)
+# 		db.session.add(profile)
+# 		db.session.commit()
 
-		if form.picture.data:
-			picture_file = save_image(form.picture.data)
-			current_user.user_profile.profile_image = picture_file
+# 		if form.picture.data:
+# 			picture_file = save_image(form.picture.data)
+# 			current_user.user_profile.profile_image = picture_file
 		
-		current_user.username = form.username.data
-		current_user.email = form.email.data
+# 		current_user.username = form.username.data
+# 		current_user.email = form.email.data
 		
-		# ! location / Geometry
-		# location = db.Column(Geometry("POINT", srid=SpatialConstants.SRID, dimension=2, management=True))
+# 		# ! location / Geometry
+# 		# location = db.Column(Geometry("POINT", srid=SpatialConstants.SRID, dimension=2, management=True))
 		
-		flash('Your profile info has been updated', 'success')
-		return redirect(url_for('own_profile'))
+# 		flash('Your profile info has been updated', 'success')
+# 		return redirect(url_for('own_profile'))
 
-	elif request.method == 'GET':
-		form.username.data = current_user.username
-		form.email.data = current_user.email
+# 	elif request.method == 'GET':
+# 		form.username.data = current_user.username
+# 		form.email.data = current_user.email
 		
-		profile = Profile.query.filter_by(user_id=current_user.id).first()
+# 		profile = Profile.query.filter_by(user_id=current_user.id).first()
 		
-		if profile:
-			if profile.name:
-				form.name.data = profile.name
-			if profile.about:
-				form.about.data = profile.about
-			if profile.address:
-				form.address.data = profile.address
-			if profile.phone_number:
-				form.phone.data = profile.phone_number
-			if profile.facebook_username:
-				form.facebook.data = profile.facebook_username
-			if profile.telegram_username:
-				form.telegram.data = profile.telegram_username
+# 		if profile:
+# 			if profile.name:
+# 				form.name.data = profile.name
+# 			if profile.about:
+# 				form.about.data = profile.about
+# 			if profile.address:
+# 				form.address.data = profile.address
+# 			if profile.phone_number:
+# 				form.phone.data = profile.phone_number
+# 			if profile.facebook_username:
+# 				form.facebook.data = profile.facebook_username
+# 			if profile.telegram_username:
+# 				form.telegram.data = profile.telegram_username
 			
-		else:
-			form.name.data = current_user.username
-			form.address.data = "Berlin, Germany"
+# 		else:
+# 			form.name.data = current_user.username
+# 			form.address.data = "Berlin, Germany"
 			
-			current_user.profile.name = current_user.username
-			current_user.profile.address = "Berlin, Germany"
+# 			current_user.profile.name = current_user.username
+# 			current_user.profile.address = "Berlin, Germany"
 
-	profile = Profile.query.filter_by(user_id=current_user.id).first()	
-	if profile:
-		profile_image = url_for('static', filename='profile_pics/' + profile.profile_image)
-	else:
-		profile_image = url_for('static', filename='profile_pics/' + 'default.jpg')
+# 	profile = Profile.query.filter_by(user_id=current_user.id).first()	
+# 	if profile:
+# 		profile_image = url_for('static', filename='profile_pics/' + profile.profile_image)
+# 	else:
+# 		profile_image = url_for('static', filename='profile_pics/' + 'default.jpg')
 
-	db.session.commit()
+# 	db.session.commit()
 	
-	return render_template("update_profile.html", title="Update profile", h2="Update profile", username=current_user.username, email=current_user.email, profile_image=profile_image, form=form)
+# 	return render_template("update_profile.html", title="Update profile", h2="Update profile", username=current_user.username, email=current_user.email, profile_image=profile_image, form=form)
 
 
 @app.route("/user/<string:username>")
 def user_profile(username):
-	if current_user.username == username:
-		return redirect(url_for('own_profile'))
+	# if current_user.username == username:
+	# 	return redirect(url_for('own_profile'))
 	return render_template("profile.html", title=f"{username}'s profile", h2=f"{username}'s profile")
 
 

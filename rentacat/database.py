@@ -58,3 +58,9 @@ profile.user_id
 # db.session.delete(user_1)
 # db.session.delete(user_2)
 # db.session.commit()
+
+# cat_keeper = CatKeeper(profile_id=Profile.query.filter_by(user_id=1).first().id)
+# cat_sitter = CatSitter(profile_id=Profile.query.filter_by(user_id=1).first().id)
+# db.session.add(cat_keeper)
+# db.session.add(cat_sitter)
+# db.session.commit()

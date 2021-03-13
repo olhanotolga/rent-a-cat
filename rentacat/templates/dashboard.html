@@ -3,6 +3,48 @@
 {% block maincontent %}
 
 {% include "./partials/header.html" %}
+
+<main class="main-content">
+	<section class="profile-card">
+		<img src="{{ url_for('static', filename='profile_pics/' + profile_image) }}" alt="{{ username+' profile image' }}">
+		<h3>{{ name }}</h3>
+		<span>{{ username }}</span>
+		<span>{{ types[0] }}</span>
+		<span>{{ profile }}</span>
+		<a href="#">View profile</a>
+		<small>Switch to {{ types[1] }} view</small>
+	</section>
+	
+	<div>
+		<a href="#">{{ types[0] }}s nearby</a>
+	</div>
+
+	<section>
+		<a href="#">My updates</a>
+		<a href="#">New update</a>
+		
+		{% for request in requests %}
+			<div>
+				<img src="#" alt="">
+				<h4>{{ request.title }}</h4>
+				<span>{{ request.start_date }} – {{ request.end_date }}</span>
+				<p>{{ request.description }}</p>
+			</div>
+		{% endfor %}
+
+		{% for offer in offers %}
+			<div>
+				<img src="#" alt="">
+				<h4>{{ offer.title }}</h4>
+				<span>{{ offer.start_date }} – {{ offer.end_date }}</span>
+				<p>{{ offer.description }}</p>
+			</div>
+		{% endfor %}
+
+	</section>
+
+</main>
+
 {% include "./partials/footer.html" %}
 
 {% endblock maincontent %}

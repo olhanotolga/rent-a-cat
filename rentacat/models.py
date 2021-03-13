@@ -20,7 +20,7 @@ class User(db.Model, UserMixin):
 	id = db.Column(db.Integer, primary_key=True)
 	username = db.Column(db.String(20), unique=True, nullable=False)
 	email = db.Column(db.String(65), unique=True, nullable=False)
-	password = db.Column(db.String(30), nullable=False)
+	password = db.Column(db.String(50), nullable=False)
 	user_type = db.Column(db.Enum(UserTypes), nullable=False, default=UserTypes.Regular)
 	date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 	#? last login — update every time user logs in
@@ -70,7 +70,8 @@ class CatKeeper(db.Model):
 	profile_id = db.Column(db.Integer, db.ForeignKey('profiles.id'), nullable=False)
 	profile = db.relationship('Profile', back_populates='cat_keeper', uselist=False, lazy=True)
 	
-	#! sqlalchemy.exc.ArgumentError: Error creating backref 'cat_keeper' on relationship 'CatKeeper.requests': property of that name exists on mapper 'mapped class Request->requests'
+	# backref — in parent object only
+	# back_populates — in both child and parent
 	requests = db.relationship('Request', back_populates='cat_keeper', lazy=True)
 
 
