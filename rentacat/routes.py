@@ -270,6 +270,7 @@ def user_profile(username):
 def new_request():
 	form = PostForm()
 	if form.validate_on_submit():
+		# ? take the cat home or visit only?
 		request = Request(title=form.title.data, description=form.content.data, cat_keeper_id=current_user.profile.cat_keeper.id, start_date=form.start_date.data, end_date=form.end_date.data)
 		db.session.add(request)
 		db.session.commit()
@@ -294,8 +295,31 @@ def new_request():
 
 # potentially: all updates as a list and map
 @app.route("/view")
+@login_required
 def view():
-	return render_template("view.html", title="View", h2="View updates nearby")
+	profile_types = {
+		'CatKeeper': 'Cat Keeper',
+		'CatSitter': 'Cat Sitter'
+	}
+	current_profile = current_user.profile.profile_type.name
+
+	profile_type = None
+	other_type = None
+	for p in profile_types:
+		if p == current_profile:
+			profile_type = profile_types[p]
+		else:
+			other_type = profile_types[p]
+	
+	requests = current_user.profile.cat_keeper.requests
+	offers = current_user.profile.cat_sitter.offers
+
+	script = 'maps.js'
+
+	map_key = app.config['GOOGLE_MAPS_API_KEY']
+	map_string = "https://maps.googleapis.com/maps/api/js?key=" + map_key + "&callback=initMap&libraries=places&v=weekly"
+
+	return render_template("view.html", title="View", h2=f"View {other_type}s nearby", script=script, map_string=map_string)
 
 
 @app.errorhandler(404)

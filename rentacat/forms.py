@@ -55,6 +55,7 @@ class PostForm(FlaskForm):
 	picture_3 = FileField('New photo', validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
 	start_date = DateField('Start date', format='%Y-%m-%d')
 	end_date = DateField('End date', format='%Y-%m-%d')
+	# ? take_home = BooleanField()
 	submit = SubmitField('Post')
 
 	def validate_end_date(form, field):

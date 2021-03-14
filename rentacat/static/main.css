@@ -70,6 +70,14 @@ body {
 	color: var(--error-300);
 }
 
+
+#map {
+	height: 400px;
+	width: 100%;
+	/* width: clamp(50%, 600px, 100%);
+	margin: 0 auto; */
+}
+
 .visually-hidden {
 	clip: rect(0 0 0 0);
 	clip-path: inset(50%);
@@ -79,3 +87,4 @@ body {
 	white-space: nowrap;
 	width: 1px;
 }
+

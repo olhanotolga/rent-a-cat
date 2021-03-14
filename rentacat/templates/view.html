@@ -3,6 +3,13 @@
 {% block maincontent %}
 
 {% include "./partials/header.html" %}
+
+<main class="main-content">
+	<div id="map"></div>
+</main>
+
 {% include "./partials/footer.html" %}
+
+<script src="{{map_string}}" async></script>
 
 {% endblock maincontent %}

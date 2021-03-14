@@ -91,6 +91,11 @@ class CatSitter(db.Model):
 	offers = db.relationship('Offer', back_populates='cat_sitter', lazy=True)
 
 
+# ? for later — to know whether cat sitter can/should take the cat home or not
+# class TakeCatHome(enum.Enum):
+# 	VisitOnly = 1
+# 	TakeHome = 2
+
 class Request(db.Model):
 	__tablename__ = 'requests'
 
@@ -103,7 +108,8 @@ class Request(db.Model):
 	start_date = db.Column(db.DateTime, nullable=False)
 	end_date = db.Column(db.DateTime, nullable=False)
 	published_on = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-	
+	# ? take_home = db.Column(db.Enum(TakeCatHome), nullable=False, default=TakeCatHome.VisitOnly)
+
 	cat_keeper_id = db.Column(db.Integer, db.ForeignKey('cat_keepers.id'), nullable=False)
 	cat_keeper = db.relationship('CatKeeper', back_populates='requests', lazy=True)
 
@@ -119,6 +125,7 @@ class Offer(db.Model):
 	start_date = db.Column(db.DateTime, nullable=False)
 	end_date = db.Column(db.DateTime, nullable=False)
 	published_on = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+	# ? take_home = db.Column(db.Enum(TakeCatHome), nullable=False, default=TakeCatHome.VisitOnly)
 
 	cat_sitter_id = db.Column(db.Integer, db.ForeignKey('cat_sitters.id'), nullable=False)
 	cat_sitter = db.relationship('CatSitter', back_populates='offers', lazy=True)
