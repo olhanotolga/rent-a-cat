@@ -5,7 +5,7 @@ from flask import render_template, url_for, flash, redirect, request
 from flask_login import login_required, current_user, login_user, logout_user
 from PIL import Image
 from rentacat import app, db, bcrypt
-from rentacat.forms import RegistrationForm, LoginForm, UpdateProfileForm
+from rentacat.forms import RegistrationForm, LoginForm, UpdateProfileForm, PostForm
 from rentacat.models import User, Profile, CatKeeper, CatSitter, Request, Offer
 
 
@@ -262,6 +262,35 @@ def user_profile(username):
 	# 	return redirect(url_for('own_profile'))
 	return render_template("profile.html", title=f"{username}'s profile", h2=f"{username}'s profile")
 
+
+
+# * ADD UPDATES (REQUESTS OR OFFERS)
+@app.route('/request/new', methods=['GET', 'POST'])
+@login_required
+def new_request():
+	form = PostForm()
+	if form.validate_on_submit():
+		request = Request(title=form.title.data, description=form.content.data, cat_keeper_id=current_user.profile.cat_keeper.id, start_date=form.start_date.data, end_date=form.end_date.data)
+		db.session.add(request)
+		db.session.commit()
+
+		if form.picture_1.data:
+			picture_file = save_image(form.picture_1.data)
+			request.photo_1 = picture_file
+			db.session.commit()
+		if form.picture_2.data:
+			picture_file = save_image(form.picture_2.data)
+			request.photo_2 = picture_file
+			db.session.commit()
+		if form.picture_3.data:
+			picture_file = save_image(form.picture_3.data)
+			request.photo_3 = picture_file
+			db.session.commit()
+
+		flash('Your request has been created!', 'success')
+		return redirect(url_for('dashboard'))
+	return render_template('new_update.html', title='New Request', form=form, legend='New request')
+	
 
 # potentially: all updates as a list and map
 @app.route("/view")

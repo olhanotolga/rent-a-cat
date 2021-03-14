@@ -1,0 +1,110 @@
+{% extends 'layout.html' %}
+
+{% block maincontent %}
+
+{% include "./partials/header.html" %}
+
+<main class="page-content">
+	<form method="POST" action="">
+		{{ form.hidden_tag() }}
+		<fieldset>
+			<legend>{{legend}}</legend>
+			
+			<div class="form-group">
+				{{ form.title.label(class="form-label visually-hidden") }}
+					
+				{% if form.title.errors %}
+					{{ form.title(class="form-feedback error") }}
+					<div class="invalid-feedback">
+						{% for error in form.title.errors %}
+							<span>{{ error }}</span>
+						{% endfor %}
+					</div>
+				{% else %}
+					{{ form.title(class="form-feedback", placeholder="Title") }}
+				{% endif %}
+			</div>
+
+			<div class="form-group">
+				{{ form.content.label(class="form-label visually-hidden") }}
+					
+				{% if form.content.errors %}
+					{{ form.content(class="form-feedback error") }}
+					<div class="invalid-feedback">
+						{% for error in form.content.errors %}
+							<span>{{ error }}</span>
+						{% endfor %}
+					</div>
+				{% else %}
+					{{ form.content(class="form-feedback", placeholder="Describe what you are asking for") }}
+				{% endif %}
+			</div>
+
+			<div class="form-group">
+				{{ form.picture_1.label() }}
+				{{ form.picture_1(class="form-control-file") }}
+				{% if form.picture_1.errors %}
+				{% for error in form.picture_1.errors %}
+				<span class="text-danger">{{ error }}</span><br>
+				{% endfor %}
+				{% endif %}
+			</div>
+			<div class="form-group">
+				{{ form.picture_2.label() }}
+				{{ form.picture_2(class="form-control-file") }}
+				{% if form.picture_2.errors %}
+				{% for error in form.picture_2.errors %}
+				<span class="text-danger">{{ error }}</span><br>
+				{% endfor %}
+				{% endif %}
+			</div>
+			<div class="form-group">
+				{{ form.picture_3.label() }}
+				{{ form.picture_3(class="form-control-file") }}
+				{% if form.picture_3.errors %}
+				{% for error in form.picture_3.errors %}
+				<span class="text-danger">{{ error }}</span><br>
+				{% endfor %}
+				{% endif %}
+			</div>
+
+			<div class="form-group">
+				{{ form.start_date.label(class="form-label visually-hidden") }}
+					
+				{% if form.start_date.errors %}
+					{{ form.start_date(class="form-feedback error") }}
+					<div class="invalid-feedback">
+						{% for error in form.start_date.errors %}
+							<span>{{ error }}</span>
+						{% endfor %}
+					</div>
+				{% else %}
+					{{ form.start_date(class="form-feedback", placeholder="Start date") }}
+				{% endif %}
+			</div>
+			<div class="form-group">
+				{{ form.end_date.label(class="form-label visually-hidden") }}
+					
+				{% if form.end_date.errors %}
+					{{ form.end_date(class="form-feedback error") }}
+					<div class="invalid-feedback">
+						{% for error in form.end_date.errors %}
+							<span>{{ error }}</span>
+						{% endfor %}
+					</div>
+				{% else %}
+					{{ form.end_date(class="form-feedback", placeholder="End date") }}
+				{% endif %}
+			</div>
+			
+		</fieldset>
+
+		<div class="form-group">
+			{{ form.submit(class="btn btn-outline-info") }}
+		</div>
+	</form>
+</main>
+
+{% include "./partials/footer.html" %}
+
+{% endblock maincontent %}

@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, RadioField
-from wtforms.fields.html5 import TelField
+from wtforms.fields.html5 import TelField, DateField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, Regexp
 from flask_login import current_user
 from rentacat.models import User
@@ -45,3 +45,18 @@ class UpdateProfileForm(FlaskForm):
 			user = User.query.filter_by(email=email.data).first()
 			if user:
 				raise ValidationError('A user with this email already exists. Did you want to log in?')
+
+
+class PostForm(FlaskForm):
+	title = StringField('Title', validators=[DataRequired(), Length(max=100)])
+	content = TextAreaField('Description', validators=[DataRequired(), Length(max=1000)])
+	picture_1 = FileField('New photo', validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
+	picture_2 = FileField('New photo', validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
+	picture_3 = FileField('New photo', validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
+	start_date = DateField('Start date', format='%Y-%m-%d')
+	end_date = DateField('End date', format='%Y-%m-%d')
+	submit = SubmitField('Post')
+
+	def pre_validate_end_date(form):
+		if form.end_date.data < form.start_date.data:
+			raise ValidationError("End date must not be earlier than start date.")
