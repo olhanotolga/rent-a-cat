@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, RadioField
 from wtforms.fields.html5 import TelField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, Regexp
 from flask_login import current_user
@@ -31,6 +31,7 @@ class UpdateProfileForm(FlaskForm):
 	facebook = StringField('Facebook username', validators=[Length(max=50)])
 	telegram = StringField('Telegram username', validators=[Length(max=32)])
 	picture = FileField('Update Profile Picture', validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
+	preferred_profile_type = RadioField('First of all, you are a', choices=[('CatKeeper', 'Cat Keeper'), ('CatSitter', 'Cat Sitter')], default='CatKeeper')
 	submit = SubmitField('Update')
 
 	def validate_username(self, username):

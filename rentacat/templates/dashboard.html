@@ -9,14 +9,13 @@
 		<img src="{{ url_for('static', filename='profile_pics/' + profile_image) }}" alt="{{ username+' profile image' }}">
 		<h3>{{ name }}</h3>
 		<span>{{ username }}</span>
-		<span>{{ types[0] }}</span>
-		<span>{{ profile }}</span>
+		<span>--{{ profile }}</span>
 		<a href="#">View profile</a>
-		<small>Switch to {{ types[1] }} view</small>
+		<small>Switch to --{{ other_profile }} view</small>
 	</section>
 	
 	<div>
-		<a href="#">{{ types[0] }}s nearby</a>
+		<a href="#">--{{ other_profile }}s nearby</a>
 	</div>
 
 	<section>

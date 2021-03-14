@@ -75,6 +75,21 @@
 				{{ form.address(class="form-feedback", placeholder="Your address (street/PLZ)")}}
 			{% endif %}
 		</div>
+		
+		<!-- PREFERRED PROFILE TYPE -->
+		<div class="form-group">
+			{{ form.preferred_profile_type.label }}
+			{% if form.preferred_profile_type.errors %}
+				{{ form.preferred_profile_type(class="form-feedback error")}}
+				<div class="form-feedback-error">
+					{% for error in form.preferred_profile_type.errors %}
+						<span>{{ error }}</span>
+					{% endfor %}
+				</div>
+			{% else %}
+				{{ form.preferred_profile_type }}
+			{% endif %}
+		</div>
 
 		<!-- ABOUT -->
 		<div class="form-group">

@@ -78,7 +78,10 @@ def login():
 @app.route("/dashboard")
 @login_required
 def dashboard():
-	profile_types = ['Cat Keeper', 'Cat Sitter']
+	profile_types = {
+		'CatKeeper': 'Cat Keeper',
+		'CatSitter': 'Cat Sitter'
+	}
 
 	# show if profile has been created,
 	# otherwise: send to create_profile
@@ -87,7 +90,15 @@ def dashboard():
 	
 	profile_image=current_user.profile.profile_image
 	username = current_user.username
-	profile = current_user.profile.name
+	profile = current_user.profile.profile_type.name
+
+	profile_type = None
+	other_type = None
+	for p in profile_types:
+		if p == profile:
+			profile_type = profile_types[p]
+		else:
+			other_type = profile_types[p]
 	
 	requests = current_user.profile.cat_keeper.requests
 	offers = current_user.profile.cat_sitter.offers
@@ -100,7 +111,8 @@ def dashboard():
 	# requests = Request.query.filter_by(cat_keeper=).order_by(Request.date_posted.desc())
 	# offers = Offer.query.filter_by(cat_sitter=).order_by(Offer.date_posted.desc())
 
-	return render_template("dashboard.html", title="Dashboard", h2=f"{username}'s Dashboard", types=profile_types, profile=profile, username=username, profile_image=profile_image, requests=requests, offers=offers)
+	# profile=profile_types[profile_type], 
+	return render_template("dashboard.html", title="Dashboard", h2=f"{username}'s Dashboard", profile=profile_type, other_profile=other_type, username=username, profile_image=profile_image, requests=requests, offers=offers)
 
 
 @app.route("/profile/create", methods=['GET', 'POST'])
@@ -110,7 +122,7 @@ def create_profile():
 	# ! otherwise: show create profile page (new route/same template with conditional rendering)
 	form = UpdateProfileForm()
 	if form.validate_on_submit():
-		profile = Profile(name=form.name.data, about=form.about.data, address=form.address.data, phone_number=form.phone.data, facebook_username=form.facebook.data, telegram_username=form.telegram.data, user_id=current_user.id)
+		profile = Profile(name=form.name.data, about=form.about.data, address=form.address.data, phone_number=form.phone.data, facebook_username=form.facebook.data, telegram_username=form.telegram.data, user_id=current_user.id, profile_type=form.preferred_profile_type.data)
 		db.session.add(profile)
 		db.session.commit()
 
@@ -136,7 +148,10 @@ def create_profile():
 		form.username.data = current_user.username
 		form.email.data = current_user.email
 		
-		picture_file = url_for('static', filename='profile_pics/default.jpg')
+		if current_user.profile:
+			picture_file = url_for('static', filename='profile_pics/' + current_user.profile.profile_image)
+		else:
+			picture_file = url_for('static', filename='profile_pics/default.jpg')
 	
 	return render_template("update_profile.html", title="Create profile", h2="Create profile", username=current_user.username, email=current_user.email, profile_image=picture_file, form=form)
 

@@ -38,6 +38,10 @@ class SpatialConstants:
 	SRID = 4326
 #######################
 
+class ProfileTypes(enum.Enum):
+	CatKeeper = 1
+	CatSitter = 2
+
 class Profile(db.Model):
 	__tablename__ = 'profiles'
 
@@ -51,6 +55,7 @@ class Profile(db.Model):
 	facebook_username = db.Column(db.String(50))
 	telegram_username = db.Column(db.String(32))
 	profile_image = db.Column(db.String(20), nullable=False, default='default.jpg')
+	profile_type = db.Column(db.Enum(ProfileTypes), nullable=False, default=ProfileTypes.CatKeeper)
 	
 	user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 	user = db.relationship('User', back_populates='profile', lazy=True)
