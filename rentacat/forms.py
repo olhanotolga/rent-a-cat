@@ -57,6 +57,6 @@ class PostForm(FlaskForm):
 	end_date = DateField('End date', format='%Y-%m-%d')
 	submit = SubmitField('Post')
 
-	def pre_validate_end_date(form):
-		if form.end_date.data < form.start_date.data:
+	def validate_end_date(form, field):
+		if field.data < form.start_date.data:
 			raise ValidationError("End date must not be earlier than start date.")
