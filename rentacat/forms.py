@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, RadioField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, RadioField, HiddenField
 from wtforms.fields.html5 import TelField, DateField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, Regexp
 from flask_login import current_user
@@ -26,7 +26,12 @@ class UpdateProfileForm(FlaskForm):
 	name = StringField('Name', validators=[DataRequired(), Length(min=3, max=50)])
 	email = StringField('Email', validators=[DataRequired(), Email()])
 	about = TextAreaField('About', validators=[Length(max=1000)])
-	address = StringField('Address (street/PLZ)', validators=[DataRequired(), Length(min=5, max=200)])
+	
+	# ADDRESS
+	acAddress = StringField('Address/Location', validators=[DataRequired(), Length(min=5, max=200)])
+	lat = HiddenField("lat", validators=[DataRequired()])
+	lng = HiddenField("lng", validators=[DataRequired()])
+
 	phone = TelField('Phone')
 	facebook = StringField('Facebook username', validators=[Length(max=50)])
 	telegram = StringField('Telegram username', validators=[Length(max=32)])

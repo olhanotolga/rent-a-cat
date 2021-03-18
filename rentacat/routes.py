@@ -120,9 +120,10 @@ def dashboard():
 def create_profile():
 	# ! show only if there is no profile!
 	# ! otherwise: show create profile page (new route/same template with conditional rendering)
+	picture_file = url_for('static', filename='profile_pics/default.jpg')
 	form = UpdateProfileForm()
 	if form.validate_on_submit():
-		profile = Profile(name=form.name.data, about=form.about.data, address=form.address.data, phone_number=form.phone.data, facebook_username=form.facebook.data, telegram_username=form.telegram.data, user_id=current_user.id, profile_type=form.preferred_profile_type.data)
+		profile = Profile(name=form.name.data, about=form.about.data, address=form.acAddress.data, phone_number=form.phone.data, facebook_username=form.facebook.data, telegram_username=form.telegram.data, user_id=current_user.id, profile_type=form.preferred_profile_type.data)
 		db.session.add(profile)
 		db.session.commit()
 
@@ -153,7 +154,12 @@ def create_profile():
 		else:
 			picture_file = url_for('static', filename='profile_pics/default.jpg')
 	
-	return render_template("update_profile.html", title="Create profile", h2="Create profile", username=current_user.username, email=current_user.email, profile_image=picture_file, form=form)
+	script = 'mapsInput.js'
+
+	map_key = app.config['GOOGLE_MAPS_API_KEY']
+	map_string = "https://maps.googleapis.com/maps/api/js?key=" + map_key + "&callback=initAutocomplete&libraries=places&v=weekly"
+
+	return render_template("update_profile.html", title="Create profile", h2="Create profile", username=current_user.username, email=current_user.email, profile_image=picture_file, form=form, map_string=map_string, script=script)
 
 
 @app.route('/logout')
@@ -201,7 +207,7 @@ def logout():
 # 	form = UpdateProfileForm()
 # 	if form.validate_on_submit():
 		
-# 		profile = Profile(name=form.name.data, about=form.about.data, address=form.address.data, phone_number=form.phone.data, facebook_username=form.facebook.data, telegram_username=form.telegram.data, user_id=current_user.id)
+# 		profile = Profile(name=form.name.data, about=form.about.data, address=form.addresscA.data, phone_number=form.phone.data, facebook_username=form.facebook.data, telegram_username=form.telegram.data, user_id=current_user.id)
 # 		db.session.add(profile)
 # 		db.session.commit()
 
@@ -230,7 +236,7 @@ def logout():
 # 			if profile.about:
 # 				form.about.data = profile.about
 # 			if profile.address:
-# 				form.address.data = profile.address
+# 				form.addresscA.data = profile.address
 # 			if profile.phone_number:
 # 				form.phone.data = profile.phone_number
 # 			if profile.facebook_username:
@@ -240,7 +246,7 @@ def logout():
 			
 # 		else:
 # 			form.name.data = current_user.username
-# 			form.address.data = "Berlin, Germany"
+# 			form.addresscA.data = "Berlin, Germany"
 			
 # 			current_user.profile.name = current_user.username
 # 			current_user.profile.address = "Berlin, Germany"

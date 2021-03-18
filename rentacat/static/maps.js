@@ -11,6 +11,14 @@ function initMap() {
 		streetViewControl: false
 	});
 
+	// fetch addresses of requests/offers from the API (backend)
+
+	const fetchUpdateAddresses = async (center) => {
+		const URL = ``;
+		const response = await fetch(URL);
+		return response.json();
+	}
+
 	const request = {
 		query: "Alexanderplatz",
 		fields: ["name", "geometry"]

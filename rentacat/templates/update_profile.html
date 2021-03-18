@@ -24,7 +24,7 @@
 					{% endfor %}
 				</div>
 			{% else %}
-				{{ form.name(class="form-feedback", placeholder="Your Name")}}
+				{{ form.name(class="form-feedback", placeholder="Your Name", autocomplete="off")}}
 			{% endif %}
 		</div>
 
@@ -40,7 +40,7 @@
 					{% endfor %}
 				</div>
 			{% else %}
-				{{ form.username(class="form-feedback", placeholder=username)}}
+				{{ form.username(class="form-feedback", placeholder=username, autocomplete="off")}}
 			{% endif %}
 		</div>
 
@@ -56,23 +56,23 @@
 					{% endfor %}
 				</div>
 			{% else %}
-				{{ form.email(class="form-feedback", placeholder=email)}}
+				{{ form.email(class="form-feedback", placeholder=email, autocomplete="off")}}
 			{% endif %}
 		</div>
 
 		<!-- ADDRESS -->
 		<div class="form-group">
-			{{ form.address.label(class="form-label visually-hidden") }}
+			{{ form.acAddress.label(class="form-label visually-hidden") }}
 
-			{% if form.address.errors %}
-				{{ form.address(class="form-feedback error")}}
+			{% if form.acAddress.errors %}
+				{{ form.acAddress(class="form-feedback error")}}
 				<div class="form-feedback-error">
-					{% for error in form.address.errors %}
+					{% for error in form.acAddress.errors %}
 						<span>{{ error }}</span>
 					{% endfor %}
 				</div>
 			{% else %}
-				{{ form.address(class="form-feedback", placeholder="Your address (street/PLZ)")}}
+				{{ form.acAddress(class="form-feedback", placeholder="Your address/location", autocomplete="off")}}
 			{% endif %}
 		</div>
 		
@@ -87,7 +87,7 @@
 					{% endfor %}
 				</div>
 			{% else %}
-				{{ form.preferred_profile_type }}
+				{{ form.preferred_profile_type(autocomplete="off") }}
 			{% endif %}
 		</div>
 
@@ -103,7 +103,7 @@
 					{% endfor %}
 				</div>
 			{% else %}
-				{{ form.about(class="form-feedback", placeholder="Tell a little about yourself")}}
+				{{ form.about(class="form-feedback", placeholder="Tell a little about yourself", autocomplete="off")}}
 			{% endif %}
 		</div>
 
@@ -119,7 +119,7 @@
 					{% endfor %}
 				</div>
 			{% else %}
-				{{ form.phone(class="form-feedback", placeholder="01234567890")}}
+				{{ form.phone(class="form-feedback", autocomplete="off", placeholder="01234567890")}}
 			{% endif %}
 		</div>
 
@@ -135,7 +135,7 @@
 					{% endfor %}
 				</div>
 			{% else %}
-				{{ form.facebook(class="form-feedback", placeholder="facebook_username")}}
+				{{ form.facebook(class="form-feedback", placeholder="facebook_username", autocomplete="off")}}
 			{% endif %}
 		</div>
 
@@ -151,7 +151,7 @@
 					{% endfor %}
 				</div>
 			{% else %}
-				{{ form.telegram(class="form-feedback", placeholder="telegram_username")}}
+				{{ form.telegram(class="form-feedback", placeholder="telegram_username", autocomplete="off")}}
 			{% endif %}
 		</div>
 
@@ -176,5 +176,7 @@
 
 
 {% include "./partials/footer.html" %}
+
+<script src="{{map_string}}" async></script>
 
 {% endblock maincontent %}
