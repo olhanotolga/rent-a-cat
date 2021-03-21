@@ -6,7 +6,7 @@
 
 <main class="main-content">
 	<section class="profile-card">
-		<img src="{{ url_for('static', filename='profile_pics/' + profile_image) }}" alt="{{ username+' profile image' }}">
+		<img src="{{ url_for('static', filename='profile_pics/' + profile_image) }}" alt="{{ username+' profile image' }}" class="profile-image">
 		<h3>{{ name }}</h3>
 		<span>{{ username }}</span>
 		<span>--{{ profile }}</span>

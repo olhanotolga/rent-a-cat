@@ -31,6 +31,7 @@ class UpdateProfileForm(FlaskForm):
 	acAddress = StringField('Address/Location', validators=[DataRequired(), Length(min=5, max=200)])
 	lat = HiddenField("lat", validators=[DataRequired()])
 	lng = HiddenField("lng", validators=[DataRequired()])
+	# POINT
 
 	phone = TelField('Phone')
 	facebook = StringField('Facebook username', validators=[Length(max=50)])

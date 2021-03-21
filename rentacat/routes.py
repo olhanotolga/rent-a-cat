@@ -50,7 +50,7 @@ def registration():
 
 		flash(f'Welcome aboard, {form.username.data}! You can now log in!', 'success')
 		
-		return redirect(url_for('dashboard'))
+		return redirect(url_for('login'))
 	return render_template("registration.html", title="Sign up", form=form, h2="Create an account")
 
 
@@ -85,6 +85,7 @@ def dashboard():
 
 	# show if profile has been created,
 	# otherwise: send to create_profile
+	print(current_user.profile)
 	if not current_user.profile:
 			return redirect(url_for('create_profile'))
 	
@@ -123,7 +124,11 @@ def create_profile():
 	picture_file = url_for('static', filename='profile_pics/default.jpg')
 	form = UpdateProfileForm()
 	if form.validate_on_submit():
-		profile = Profile(name=form.name.data, about=form.about.data, address=form.acAddress.data, phone_number=form.phone.data, facebook_username=form.facebook.data, telegram_username=form.telegram.data, user_id=current_user.id, profile_type=form.preferred_profile_type.data)
+		lat = form.lat.data
+		lng = form.lng.data
+		location = Profile.point_rep(lng, lat)
+		#? transform the lat and lng into a point (DO I NEED IT?)
+		profile = Profile(name=form.name.data, about=form.about.data, address=form.acAddress.data, profile_location=location, phone_number=form.phone.data, facebook_username=form.facebook.data, telegram_username=form.telegram.data, user_id=current_user.id, profile_type=form.preferred_profile_type.data)
 		db.session.add(profile)
 		db.session.commit()
 

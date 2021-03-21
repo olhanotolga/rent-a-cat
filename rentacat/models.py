@@ -2,7 +2,8 @@ import enum
 from datetime import datetime
 from rentacat import db, login_manager, app
 from flask_login import UserMixin
-
+from geoalchemy2 import Geometry
+from geoalchemy2.elements import WKTElement
 
 
 @login_manager.user_loader
@@ -49,8 +50,9 @@ class Profile(db.Model):
 	name = db.Column(db.String(50), nullable=False)
 	about = db.Column(db.Text)
 	address = db.Column(db.String(200), nullable=False)
-	# ! location / Geometry
-	# location = db.Column(Geometry("POINT", srid=SpatialConstants.SRID, dimension=2, management=True))
+	# location / Geometry
+	profile_location = db.Column(Geometry("POINT", srid=SpatialConstants.SRID, dimension=2, management=True))
+	
 	phone_number = db.Column(db.Integer)
 	facebook_username = db.Column(db.String(50))
 	telegram_username = db.Column(db.String(32))
@@ -65,6 +67,12 @@ class Profile(db.Model):
 
 	def __repr__(self):
 		return f"Profile('{self.name}', '{self.profile_image}')"
+
+	@staticmethod
+	def point_rep(latitude, longitude):
+		point = f'POINT({longitude} {latitude})'
+		wkt_el = WKTElement(point, SpatialConstants.SRID)
+		return wkt_el
 
 
 class CatKeeper(db.Model):

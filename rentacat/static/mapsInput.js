@@ -6,7 +6,7 @@ const onPlaceChanged = () => {
 	let place = addressAutocomplete.getPlace();
 	console.log('place', place);
 	console.log('geometry', place.geometry);
-	console.log('formatted_address', place.formatted_address);
+	console.log('address_components', place.address_components);
 	console.log('name', place.name);
 
 	if (!place.geometry) {
@@ -14,7 +14,7 @@ const onPlaceChanged = () => {
 	} else {
 		document.getElementById("lat").value = place.geometry.location.lat();
 		document.getElementById("lng").value = place.geometry.location.lng();
-		input.value = place.geometry.formatted_address;
+		input.value = place.name;
 	}	
 }
 

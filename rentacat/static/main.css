@@ -88,3 +88,12 @@ body {
 	width: 1px;
 }
 
+
+
+/* PROFILE */
+
+.profile-image {
+	width: 100px;
+	height: auto;
+	border-radius: 50%;
+}
