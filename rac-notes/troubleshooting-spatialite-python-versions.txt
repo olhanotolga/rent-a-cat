@@ -1,0 +1,74 @@
+# Resources:
+https://geoalchemy-2.readthedocs.io/en/latest/spatialite_tutorial.html
+
+Problem:
+# The sqlite3 module is not built with loadable extension support by default, because some platforms (notably Mac OS X) have SQLite libraries which are compiled without this feature. To get loadable extension support, you must pass –enable-loadable-sqlite-extensions to configure.
+https://stackoverflow.com/questions/57977481/how-to-use-enable-load-extension-from-sqlite3
+
+Fixing:
+https://formulae.brew.sh/formula/sqlite
+https://formulae.brew.sh/formula/pyenv
+brew install openssl xz gdbm
+
+# the following installs Python 3.8.2 with pyenv with the necessary configurations:
+PYTHON_CONFIGURE_OPTS="--enable-loadable-sqlite-extensions --enable-optimizations --with-openssl=/usr/bin/openssl" LDFLAGS="-L/usr/local/opt/sqlite/lib" CPPFLAGS="-I/usr/local/opt/sqlite/include" pyenv install 3.8.2
+
+https://github.com/pyenv/pyenv — documentation + an interesting read on how pyenv works
+https://realpython.com/intro-to-pyenv/ - another guide
+
+# adding pyenv init to your shell to enable shims and autocompletion
+# the one I used from https://github.com/pyenv/pyenv#basic-github-checkout
+if command -v pyenv 1>/dev/null 2>&1; then
+  eval "$(pyenv init -)"
+fi
+
+# from Homebrew (didn't work):
+if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
+
+# to use pyenv with virtualenv:
+https://github.com/pyenv/pyenv-virtualenv
+
+# I created a global virtual environment with python 3.8.2:
+pyenv virtualenv 3.8.2 venv-rac
+
+# this creates a .python-version file in the project directory: https://github.com/pyenv/pyenv/blob/master/COMMANDS.md#pyenv-local
+pyenv local 3.8.2			# (maybe not needed)
+pyenv local venv-rac
+
+# I created a virtual environment in the project (before this, I saved all the depencencies with `pip freeze > requirements.txt` and simply deleted the old virtual environment folder):
+pip install virtualenv
+virtualenv -p python venv
+source venv/bin/activate
+pip install -r requirements.txt				# reinstalled the packages I used
+
+
+### Refer to LOG to see CLI commands & errors
+
+
+# in __init__.py:
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+app.config['SPATIALITE_LIBRARY_PATH'] = '/usr/local/lib/mod_spatialite.dylib'
+
+db = SQLAlchemy(app)
+
+def load_spatialite(dbapi_conn, connection_record):
+	dbapi_conn.enable_load_extension(True)
+	dbapi_conn.load_extension('/usr/local/lib/mod_spatialite.dylib')
+	dbapi_conn.execute('SELECT InitSpatialMetaData()')
+
+event.listen(Pool, "connect", load_spatialite)
+
+
+
+
+# ERRORS
+
+1. launch: all works, connection established
+2. registration: all good
+3. login: redirects to dashboard, throws this:
+sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such column: profiles.profile_location
+(seemed like the Profile model could not be even read because of that column)
+4. At some point, I had 2 files called site.db, one in my project folder, the other one one level higher. I also could see 21 geocolumns added in my SQLiteStudio
+5. I deleted the site.db file (the top one), exited the app and the terminal session
+6. I ran the app again, in Python CLI I imported the db and created all columns... and it worked! the user is being created, sent to dashboard and then to create_profile --> Profile successfully created and location column showing in SQLiteStudio

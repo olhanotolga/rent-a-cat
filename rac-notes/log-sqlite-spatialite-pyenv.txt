@@ -1,0 +1,181 @@
+Last login: Sun Mar 21 00:13:42 on ttys005
+Olhas-Air:~ oh$ sqlite3
+SQLite version 3.34.1 2021-01-20 14:10:07
+Enter ".help" for usage hints.
+Connected to a transient in-memory database.
+Use ".open FILENAME" to reopen on a persistent database.
+sqlite> exit 0
+   ...> exit
+   ...> exit 0
+Olhas-Air:~ oh$
+Olhas-Air:~ oh$ sqlite3
+SQLite version 3.34.1 2021-01-20 14:10:07
+Enter ".help" for usage hints.
+Connected to a transient in-memory database.
+Use ".open FILENAME" to reopen on a persistent database.
+sqlite> .dbconfig
+          defensive off
+            dqs_ddl on
+            dqs_dml on
+        enable_fkey off
+        enable_qpsg off
+     enable_trigger on
+        enable_view on
+     fts3_tokenizer off
+ legacy_alter_table off
+ legacy_file_format off
+     load_extension on
+   no_ckpt_on_close off
+     reset_database off
+        trigger_eqp off
+     trusted_schema on
+    writable_schema off
+Olhas-Air:~ oh$ which sqlite3
+/usr/local/opt/sqlite/bin/sqlite3
+Olhas-Air:~ oh$ cd /usr/local/opt/sqlite/
+Olhas-Air:sqlite oh$ ll
+total 16
+drwxr-xr-x  9 oh  staff   288B Mar 21 13:06 .
+drwxr-xr-x  3 oh  staff    96B Mar 21 13:06 ..
+drwxr-xr-x  3 oh  staff    96B Jan 20 15:38 .brew
+-rw-r--r--  1 oh  staff   775B Mar 21 13:06 INSTALL_RECEIPT.json
+-rw-r--r--  1 oh  staff   3.5K Jan 20 15:38 README.txt
+drwxr-xr-x  3 oh  staff    96B Jan 20 15:38 bin
+drwxr-xr-x  4 oh  staff   128B Jan 20 15:38 include
+drwxr-xr-x  6 oh  staff   192B Jan 20 15:38 lib
+drwxr-xr-x  3 oh  staff    96B Jan 20 15:38 share
+Olhas-Air:sqlite oh$ which python
+/usr/bin/python
+Olhas-Air:sqlite oh$ python --version
+Python 3.8.2
+Olhas-Air:sqlite oh$ which pyenv
+Olhas-Air:sqlite oh$ pyenv
+-bash: pyenv: command not found
+Olhas-Air:sqlite oh$ pip install pyenv
+Collecting pyenv
+  Downloading pyenv-0.0.1.tar.gz (1.4 kB)
+Using legacy 'setup.py install' for pyenv, since package 'wheel' is not installed.
+Installing collected packages: pyenv
+    Running setup.py install for pyenv ... error
+    ERROR: Command errored out with exit status 1:
+     command: /Library/Frameworks/Python.framework/Versions/3.8/bin/python3.8 -u -c 'import sys, setuptools, tokenize; sys.argv[0] = '"'"'/private/var/folders/m8/xm8_qvtx23n5mpsgtbyb0p8m0000gn/T/pip-install-al195mpl/pyenv_5658a6c1141a44e38ee2991a32fa36cc/setup.py'"'"'; __file__='"'"'/private/var/folders/m8/xm8_qvtx23n5mpsgtbyb0p8m0000gn/T/pip-install-al195mpl/pyenv_5658a6c1141a44e38ee2991a32fa36cc/setup.py'"'"';f=getattr(tokenize, '"'"'open'"'"', open)(__file__);code=f.read().replace('"'"'\r\n'"'"', '"'"'\n'"'"');f.close();exec(compile(code, __file__, '"'"'exec'"'"'))' install --record /private/var/folders/m8/xm8_qvtx23n5mpsgtbyb0p8m0000gn/T/pip-record-dr_5uj00/install-record.txt --single-version-externally-managed --compile --install-headers /Library/Frameworks/Python.framework/Versions/3.8/include/python3.8/pyenv
+         cwd: /private/var/folders/m8/xm8_qvtx23n5mpsgtbyb0p8m0000gn/T/pip-install-al195mpl/pyenv_5658a6c1141a44e38ee2991a32fa36cc/
+    Complete output (9 lines):
+    running install
+    ############################ NOTE ############################
+    We are sorry, but this package is not installable with pip.
+
+    Please read the installation instructions at:
+
+    https://github.com/pyenv/pyenv#installation
+    ##############################################################
+
+    ----------------------------------------
+ERROR: Command errored out with exit status 1: /Library/Frameworks/Python.framework/Versions/3.8/bin/python3.8 -u -c 'import sys, setuptools, tokenize; sys.argv[0] = '"'"'/private/var/folders/m8/xm8_qvtx23n5mpsgtbyb0p8m0000gn/T/pip-install-al195mpl/pyenv_5658a6c1141a44e38ee2991a32fa36cc/setup.py'"'"'; __file__='"'"'/private/var/folders/m8/xm8_qvtx23n5mpsgtbyb0p8m0000gn/T/pip-install-al195mpl/pyenv_5658a6c1141a44e38ee2991a32fa36cc/setup.py'"'"';f=getattr(tokenize, '"'"'open'"'"', open)(__file__);code=f.read().replace('"'"'\r\n'"'"', '"'"'\n'"'"');f.close();exec(compile(code, __file__, '"'"'exec'"'"'))' install --record /private/var/folders/m8/xm8_qvtx23n5mpsgtbyb0p8m0000gn/T/pip-record-dr_5uj00/install-record.txt --single-version-externally-managed --compile --install-headers /Library/Frameworks/Python.framework/Versions/3.8/include/python3.8/pyenv Check the logs for full command output.
+WARNING: You are using pip version 21.0; however, version 21.0.1 is available.
+You should consider upgrading via the '/Library/Frameworks/Python.framework/Versions/3.8/bin/python3.8 -m pip install --upgrade pip' command.
+Olhas-Air:sqlite oh$ brew install pyenv
+==> Downloading https://homebrew.bintray.com/bottles/autoconf-2.69.mojave.bottle
+==> Downloading from https://d29vzk4ow07wi7.cloudfront.net/9724736d34773b6e41e24
+######################################################################## 100.0%
+==> Downloading https://homebrew.bintray.com/bottles/pyenv-1.2.24.1.mojave.bottl
+==> Downloading from https://d29vzk4ow07wi7.cloudfront.net/5f92c1be17e003ecbe015
+######################################################################## 100.0%
+==> Installing dependencies for pyenv: autoconf
+==> Installing pyenv dependency: autoconf
+==> Pouring autoconf-2.69.mojave.bottle.4.tar.gz
+==> Caveats
+Emacs Lisp files have been installed to:
+  /usr/local/share/emacs/site-lisp/autoconf
+==> Summary
+🍺  /usr/local/Cellar/autoconf/2.69: 71 files, 3.0MB
+==> Installing pyenv
+==> Pouring pyenv-1.2.24.1.mojave.bottle.tar.gz
+🍺  /usr/local/Cellar/pyenv/1.2.24.1: 742 files, 2.6MB
+==> Caveats
+==> autoconf
+Emacs Lisp files have been installed to:
+  /usr/local/share/emacs/site-lisp/autoconf
+Olhas-Air:sqlite oh$ brew install openssl xz gdbm
+Warning: openssl@1.1 1.1.1j is already installed and up-to-date.
+To reinstall 1.1.1j, run:
+  brew reinstall openssl@1.1
+Warning: xz 5.2.5 is already installed and up-to-date.
+To reinstall 5.2.5, run:
+  brew reinstall xz
+Warning: gdbm 1.19 is already installed and up-to-date.
+To reinstall 1.19, run:
+  brew reinstall gdbm
+Olhas-Air:sqlite oh$ PYTHON_CONFIGURE_OPTS="--enable-loadable-sqlite-extensions --enable-optimizations --with-openssl=\$(brew --prefix openssl)" \
+> LDFLAGS="-L/usr/local/opt/sqlite/lib" \
+> CPPFLAGS="-I/usr/local/opt/sqlite/include" \
+> pyenv install 3.8.2
+python-build: use openssl@1.1 from homebrew
+python-build: use readline from homebrew
+Downloading Python-3.8.2.tar.xz...
+-> https://www.python.org/ftp/python/3.8.2/Python-3.8.2.tar.xz
+Installing Python-3.8.2...
+python-build: use readline from homebrew
+python-build: use zlib from xcode sdk
+
+BUILD FAILED (OS X 10.14.6 using python-build 20180424)
+
+Inspect or clean up the working tree at /var/folders/m8/xm8_qvtx23n5mpsgtbyb0p8m0000gn/T/python-build.20210321132541.32165
+Results logged to /var/folders/m8/xm8_qvtx23n5mpsgtbyb0p8m0000gn/T/python-build.20210321132541.32165.log
+
+Last 10 log lines:
+/var/folders/m8/xm8_qvtx23n5mpsgtbyb0p8m0000gn/T/python-build.20210321132541.32165 /usr/local/opt/sqlite
+/var/folders/m8/xm8_qvtx23n5mpsgtbyb0p8m0000gn/T/python-build.20210321132541.32165/Python-3.8.2 /var/folders/m8/xm8_qvtx23n5mpsgtbyb0p8m0000gn/T/python-build.20210321132541.32165 /usr/local/opt/sqlite
+configure: error: expected an absolute directory name for --prefix: openssl)
+make: *** No targets specified and no makefile found.  Stop.
+Olhas-Air:sqlite oh$ ll
+total 16
+drwxr-xr-x  9 oh  staff   288B Mar 21 13:06 .
+drwxr-xr-x  3 oh  staff    96B Mar 21 13:06 ..
+drwxr-xr-x  3 oh  staff    96B Jan 20 15:38 .brew
+-rw-r--r--  1 oh  staff   775B Mar 21 13:06 INSTALL_RECEIPT.json
+-rw-r--r--  1 oh  staff   3.5K Jan 20 15:38 README.txt
+drwxr-xr-x  3 oh  staff    96B Jan 20 15:38 bin
+drwxr-xr-x  4 oh  staff   128B Jan 20 15:38 include
+drwxr-xr-x  6 oh  staff   192B Jan 20 15:38 lib
+drwxr-xr-x  3 oh  staff    96B Jan 20 15:38 share
+Olhas-Air:sqlite oh$ pwd
+/usr/local/opt/sqlite
+Olhas-Air:sqlite oh$ which openssl
+/usr/bin/openssl
+Olhas-Air:sqlite oh$ PYTHON_CONFIGURE_OPTS="--enable-loadable-sqlite-extensions --enable-optimizations --with-openssl=/usr/bin/openssl" LDFLAGS="-L/usr/local/opt/sqlite/lib" CPPFLAGS="-I/usr/local/opt/sqlite/include" pyenv install 3.8.2
+python-build: use openssl@1.1 from homebrew
+python-build: use readline from homebrew
+Downloading Python-3.8.2.tar.xz...
+-> https://www.python.org/ftp/python/3.8.2/Python-3.8.2.tar.xz
+Installing Python-3.8.2...
+python-build: use readline from homebrew
+python-build: use zlib from xcode sdk
+Installed Python-3.8.2 to /Users/oh/.pyenv/versions/3.8.2
+
+Olhas-Air:sqlite oh$ pyenv versions
+* system (set by /Users/oh/.pyenv/version)
+  3.8.2
+Olhas-Air:sqlite oh$ python --version
+Python 3.8.2
+Olhas-Air:sqlite oh$ which python
+/usr/bin/python
+Olhas-Air:sqlite oh$ brew install pyenv-virtualenv
+Updating Homebrew...
+==> Auto-updated Homebrew!
+Updated 1 tap (homebrew/core).
+==> Updated Formulae
+Updated 3 formulae.
+
+==> Downloading https://github.com/pyenv/pyenv-virtualenv/archive/v1.1.5.tar.gz
+==> Downloading from https://codeload.github.com/pyenv/pyenv-virtualenv/tar.gz/v
+######################################################################## 100.0%
+==> ./install.sh
+==> Caveats
+To enable auto-activation add to your profile:
+  if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
+==> Summary
+🍺  /usr/local/Cellar/pyenv-virtualenv/1.1.5: 22 files, 65.6KB, built in 4 seconds
+Olhas-Air:sqlite oh$ vim ~/.bash_profile
+Olhas-Air:sqlite oh$ source ~/.bash_profile
+Olhas-Air:sqlite oh$
