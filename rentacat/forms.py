@@ -61,7 +61,7 @@ class PostForm(FlaskForm):
 	picture_3 = FileField('New photo', validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
 	start_date = DateField('Start date', format='%Y-%m-%d')
 	end_date = DateField('End date', format='%Y-%m-%d')
-	# ? take_home = BooleanField()
+	cat_sitting_mode = RadioField('You would like the Cat Sitter to be able to', choices=[('Visit', 'visit your cat at home'), ('TakeHome', 'take your cat to their place'), ('VisitAndHome', 'visit your cat OR take it to their place')], default='VisitAndHome')
 	submit = SubmitField('Post')
 
 	def validate_end_date(form, field):

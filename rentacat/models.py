@@ -6,14 +6,19 @@ from geoalchemy2 import Geometry
 from geoalchemy2.elements import WKTElement
 
 
+#* RELATIONSHIPS
+# backref — in parent object only
+# back_populates — in both child and parent
+
+
 @login_manager.user_loader
 def load_user(user_id):
 	return User.query.get(int(user_id))
 
+
 class UserTypes(enum.Enum):
 	Admin = 1
 	Regular = 2
-
 
 class User(db.Model, UserMixin):
 	__tablename__ = 'users'
@@ -33,11 +38,13 @@ class User(db.Model, UserMixin):
 	def __repr__(self):
 		return f"User('{self.username}', '{self.email}', type:{self.user_type})"
 
+
 #######################
 class SpatialConstants:
 	# SRID
 	SRID = 4326
 #######################
+
 
 class ProfileTypes(enum.Enum):
 	CatKeeper = 1
@@ -61,9 +68,10 @@ class Profile(db.Model):
 	
 	user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 	user = db.relationship('User', back_populates='profile', lazy=True)
-	
-	cat_keeper = db.relationship('CatKeeper', back_populates='profile', uselist=False, lazy=True)
-	cat_sitter = db.relationship('CatSitter', back_populates='profile', uselist=False, lazy=True)
+
+	requests = db.relationship('Request', back_populates='cat_keeper', lazy=True)
+
+	offers = db.relationship('Offer', back_populates='cat_sitter', lazy=True)
 
 	def __repr__(self):
 		return f"Profile('{self.name}', '{self.profile_image}')"
@@ -75,34 +83,12 @@ class Profile(db.Model):
 		return wkt_el
 
 
-class CatKeeper(db.Model):
-	__tablename__ = 'cat_keepers'
+# to know whether cat sitter can/should take the cat home or not
+class CatSittingModes(enum.Enum):
+	VisitAndHome = 1
+	Visit = 2
+	TakeHome = 3
 
-	id = db.Column(db.Integer, primary_key=True)
-	
-	profile_id = db.Column(db.Integer, db.ForeignKey('profiles.id'), nullable=False)
-	profile = db.relationship('Profile', back_populates='cat_keeper', uselist=False, lazy=True)
-	
-	# backref — in parent object only
-	# back_populates — in both child and parent
-	requests = db.relationship('Request', back_populates='cat_keeper', lazy=True)
-
-
-class CatSitter(db.Model):
-	__tablename__ = 'cat_sitters'
-
-	id = db.Column(db.Integer, primary_key=True)
-	
-	profile_id = db.Column(db.Integer, db.ForeignKey('profiles.id'), nullable=False)
-	profile = db.relationship('Profile', back_populates='cat_sitter', uselist=False, lazy=True)
-
-	offers = db.relationship('Offer', back_populates='cat_sitter', lazy=True)
-
-
-# ? for later — to know whether cat sitter can/should take the cat home or not
-# class TakeCatHome(enum.Enum):
-# 	VisitOnly = 1
-# 	TakeHome = 2
 
 class Request(db.Model):
 	__tablename__ = 'requests'
@@ -116,13 +102,15 @@ class Request(db.Model):
 	start_date = db.Column(db.DateTime, nullable=False)
 	end_date = db.Column(db.DateTime, nullable=False)
 	published_on = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-	# ? take_home = db.Column(db.Enum(TakeCatHome), nullable=False, default=TakeCatHome.VisitOnly)
+	
+	cat_sitting_mode = db.Column(db.Enum(CatSittingModes), nullable=False, default=CatSittingModes.VisitAndHome)
 
-	cat_keeper_id = db.Column(db.Integer, db.ForeignKey('cat_keepers.id'), nullable=False)
-	cat_keeper = db.relationship('CatKeeper', back_populates='requests', lazy=True)
+	cat_keeper_id = db.Column(db.Integer, db.ForeignKey('profiles.id'), nullable=False)
+	cat_keeper = db.relationship('Profile', back_populates='requests', lazy=True)
 
 	def __repr__(self):
 		return f"Request('{self.title}', '{self.published_on}')"
+
 
 class Offer(db.Model):
 	__tablename__ = 'offers'
@@ -133,11 +121,12 @@ class Offer(db.Model):
 	start_date = db.Column(db.DateTime, nullable=False)
 	end_date = db.Column(db.DateTime, nullable=False)
 	published_on = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-	# ? take_home = db.Column(db.Enum(TakeCatHome), nullable=False, default=TakeCatHome.VisitOnly)
+	
+	cat_sitting_mode = db.Column(db.Enum(CatSittingModes), nullable=False, default=CatSittingModes.VisitAndHome)
 
-	cat_sitter_id = db.Column(db.Integer, db.ForeignKey('cat_sitters.id'), nullable=False)
-	cat_sitter = db.relationship('CatSitter', back_populates='offers', lazy=True)
+	cat_sitter_id = db.Column(db.Integer, db.ForeignKey('profiles.id'), nullable=False)
+	cat_sitter = db.relationship('Profile', back_populates='offers', lazy=True)
 
 	def __repr__(self):
 		return f"Offer('{self.title}', '{self.published_on}')"
-	
+

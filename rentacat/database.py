@@ -3,7 +3,7 @@ from rentacat import db
 db.drop_all()
 db.create_all()
 
-from rentacat.models import User, Profile, CatSitter, CatKeeper, Request, Offer
+from rentacat.models import User, Profile, Request, Offer
 
 # user_1 = User(username='admin', email='admin@rac.com', password='qwerty')
 # db.session.add(user_1)

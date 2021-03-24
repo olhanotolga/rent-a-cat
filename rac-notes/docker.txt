@@ -1,0 +1,35 @@
+DOCKER!!!!
+
+https://github.com/mrts/docker-python-spatialite
+
+make a docker-image dir inside the project & enter it
+clone the repo into this dir
+
+inside the repo, Dockerfile is a template for an image which I have to build
+(building command in the repo README)
+
+Then — Usage:
+Run with necessary params:
+	<path to the project>:/src -p 9500:5000 -it <build name> bash
+
+the above opens a bash shell inside the container
+
+`cd src` and then `ls` should show the folders/files inside
+
+`pip install -r requirements.txt`
+
+`python run.py` / `python main.py`
+OR:
+`python run_on_zero.py` (changed localhost:5000 to be localhost:0000)
+
+localhost:9500
+
+MIGRATIONS:
+
+`flask db upgrade`
+
+(Errors)
+
+export variables with:
+`export SECRET_KEY=hgjhgkhlhlhh`
+etc.

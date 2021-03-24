@@ -6,7 +6,7 @@ from flask_login import login_required, current_user, login_user, logout_user
 from PIL import Image
 from rentacat import app, db, bcrypt
 from rentacat.forms import RegistrationForm, LoginForm, UpdateProfileForm, PostForm
-from rentacat.models import User, Profile, CatKeeper, CatSitter, Request, Offer
+from rentacat.models import User, Profile, Request, Offer
 
 
 def save_image(form_picture):
@@ -49,8 +49,9 @@ def registration():
 		db.session.commit()
 
 		flash(f'Welcome aboard, {form.username.data}! You can now log in!', 'success')
-		
+
 		return redirect(url_for('login'))
+
 	return render_template("registration.html", title="Sign up", form=form, h2="Create an account")
 
 
@@ -58,14 +59,13 @@ def registration():
 def login():
 	if current_user.is_authenticated:
 		return redirect(url_for('dashboard'))
+
 	form = LoginForm()
 	if form.validate_on_submit():
 		user = User.query.filter_by(email=form.email.data).first()
 		if user and bcrypt.check_password_hash(user.password, form.password.data):
-		# 'admin@rac.com' and 'qwerty':
-		# 'third.user@email.com' and 'thirduser'
 			login_user(user, remember=form.remember.data)
-			# update last login field
+			# update last login
 			user.last_login = datetime.utcnow
 			# redirect to the page user was initially interested in (if any)
 			next_page = request.args.get('next')
@@ -83,37 +83,28 @@ def dashboard():
 		'CatSitter': 'Cat Sitter'
 	}
 
+	current_profile = current_user.profile
 	# show if profile has been created,
-	# otherwise: send to create_profile
-	print(current_user.profile)
-	if not current_user.profile:
+	# otherwise send to create_profile
+	if not current_profile:
 			return redirect(url_for('create_profile'))
 	
-	profile_image=current_user.profile.profile_image
+	profile_image=current_profile.profile_image
 	username = current_user.username
-	profile = current_user.profile.profile_type.name
+	profile_type = current_profile.profile_type.name
 
-	profile_type = None
+	current_type = None
 	other_type = None
 	for p in profile_types:
-		if p == profile:
-			profile_type = profile_types[p]
+		if p == profile_type:
+			current_type = profile_types[p]
 		else:
 			other_type = profile_types[p]
 	
-	requests = current_user.profile.cat_keeper.requests
-	offers = current_user.profile.cat_sitter.offers
+	requests = current_profile.requests
+	offers = current_profile.offers
 
-	# user = User.query.filter_by(username=username).first_or_404()
-	# posts = Post.query.filter_by(author=user)\
-	# 	.order_by(Post.date_posted.desc())\
-	# 	.paginate(page=page, per_page=7)
-	
-	# requests = Request.query.filter_by(cat_keeper=).order_by(Request.date_posted.desc())
-	# offers = Offer.query.filter_by(cat_sitter=).order_by(Offer.date_posted.desc())
-
-	# profile=profile_types[profile_type], 
-	return render_template("dashboard.html", title="Dashboard", h2=f"{username}'s Dashboard", profile=profile_type, other_profile=other_type, username=username, profile_image=profile_image, requests=requests, offers=offers)
+	return render_template("dashboard.html", title="Dashboard", h2=f"{username}'s Dashboard", profile=current_type, other_profile=other_type, username=username, profile_image=profile_image, requests=requests, offers=offers)
 
 
 @app.route("/profile/create", methods=['GET', 'POST'])
@@ -132,20 +123,10 @@ def create_profile():
 		db.session.add(profile)
 		db.session.commit()
 
-		#! create Cat Keeper & Cat Sitter
-		cat_keeper = CatKeeper(profile_id=Profile.query.filter_by(user_id=current_user.id).first().id)
-		cat_sitter = CatSitter(profile_id=Profile.query.filter_by(user_id=current_user.id).first().id)
-		db.session.add(cat_keeper)
-		db.session.add(cat_sitter)
-		db.session.commit()
-
 		if form.picture.data:
 			picture_file = save_image(form.picture.data)
 			current_user.profile.profile_image = picture_file
 			db.session.commit()
-
-		# ! location / Geometry
-		# location = db.Column(Geometry("POINT", srid=SpatialConstants.SRID, dimension=2, management=True))
 		
 		flash('Your profile has been created', 'success')
 		return redirect(url_for('dashboard'))
@@ -282,7 +263,7 @@ def new_request():
 	form = PostForm()
 	if form.validate_on_submit():
 		# ? take the cat home or visit only?
-		request = Request(title=form.title.data, description=form.content.data, cat_keeper_id=current_user.profile.cat_keeper.id, start_date=form.start_date.data, end_date=form.end_date.data)
+		request = Request(title=form.title.data, description=form.content.data, cat_keeper_id=current_user.profile.id, start_date=form.start_date.data, end_date=form.end_date.data, cat_sitting_mode=form.cat_sitting_mode.data)
 		db.session.add(request)
 		db.session.commit()
 
@@ -302,7 +283,12 @@ def new_request():
 		flash('Your request has been created!', 'success')
 		return redirect(url_for('dashboard'))
 	return render_template('new_update.html', title='New Request', form=form, legend='New request')
-	
+
+
+# @app.route("/get_updates")
+# def get_updates():
+
+
 
 # potentially: all updates as a list and map
 @app.route("/view")
@@ -312,25 +298,26 @@ def view():
 		'CatKeeper': 'Cat Keeper',
 		'CatSitter': 'Cat Sitter'
 	}
-	current_profile = current_user.profile.profile_type.name
+	current_profile_type = current_user.profile.profile_type.name
 
 	profile_type = None
 	other_type = None
 	for p in profile_types:
-		if p == current_profile:
+		if p == current_profile_type:
 			profile_type = profile_types[p]
 		else:
 			other_type = profile_types[p]
 	
-	requests = current_user.profile.cat_keeper.requests
-	offers = current_user.profile.cat_sitter.offers
+	requests = current_user.profile.requests
+	offers = current_user.profile.offers
+	# requests = Request.query.filter_by(cat_keeper=current_profile).order_by(Request.date_posted.desc())
+	# offers = Offer.query.filter_by(cat_sitter=current_profile).order_by(Offer.date_posted.desc())
 
 	script = 'maps.js'
-
 	map_key = app.config['GOOGLE_MAPS_API_KEY']
 	map_string = "https://maps.googleapis.com/maps/api/js?key=" + map_key + "&callback=initMap&libraries=places&v=weekly"
 
-	return render_template("view.html", title="View", h2=f"View {other_type}s nearby", script=script, map_string=map_string)
+	return render_template("view.html", title="View", h2=f"View {other_type}s nearby", script=script, map_string=map_string, requests=requests, offers=offers)
 
 
 @app.errorhandler(404)
