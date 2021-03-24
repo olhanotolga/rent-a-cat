@@ -1,7 +1,7 @@
 import os
 import secrets
 from datetime import datetime
-from flask import render_template, url_for, flash, redirect, request
+from flask import render_template, url_for, flash, redirect, request, jsonify
 from flask_login import login_required, current_user, login_user, logout_user
 from PIL import Image
 from rentacat import app, db, bcrypt
@@ -9,11 +9,11 @@ from rentacat.forms import RegistrationForm, LoginForm, UpdateProfileForm, PostF
 from rentacat.models import User, Profile, Request, Offer
 
 
-def save_image(form_picture):
+def save_image(form_picture, directory):
 	random_hex = secrets.token_hex(8)
 	_, f_ext = os.path.splitext(form_picture.filename)
 	picture_fn = random_hex + f_ext
-	picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_fn)
+	picture_path = os.path.join(app.root_path, 'static/' + directory, picture_fn)
 
 	output_size = (256, 256)
 	i = Image.open(form_picture)
@@ -124,7 +124,7 @@ def create_profile():
 		db.session.commit()
 
 		if form.picture.data:
-			picture_file = save_image(form.picture.data)
+			picture_file = save_image(form.picture.data, 'profile_pics/')
 			current_user.profile.profile_image = picture_file
 			db.session.commit()
 		
@@ -198,7 +198,7 @@ def logout():
 # 		db.session.commit()
 
 # 		if form.picture.data:
-# 			picture_file = save_image(form.picture.data)
+# 			picture_file = save_image(form.picture.data, 'profile_pics/')
 # 			current_user.user_profile.profile_image = picture_file
 		
 # 		current_user.username = form.username.data
@@ -268,15 +268,15 @@ def new_request():
 		db.session.commit()
 
 		if form.picture_1.data:
-			picture_file = save_image(form.picture_1.data)
+			picture_file = save_image(form.picture_1.data, 'update_imgs/')
 			request.photo_1 = picture_file
 			db.session.commit()
 		if form.picture_2.data:
-			picture_file = save_image(form.picture_2.data)
+			picture_file = save_image(form.picture_2.data, 'update_imgs/')
 			request.photo_2 = picture_file
 			db.session.commit()
 		if form.picture_3.data:
-			picture_file = save_image(form.picture_3.data)
+			picture_file = save_image(form.picture_3.data, 'update_imgs/')
 			request.photo_3 = picture_file
 			db.session.commit()
 
@@ -285,8 +285,46 @@ def new_request():
 	return render_template('new_update.html', title='New Request', form=form, legend='New request')
 
 
-# @app.route("/get_updates")
-# def get_updates():
+####*#########*####
+### *** API *** ###
+####*#########*####
+@app.route("/api/updates/<string:update_type>", methods=['GET'])
+def get_requests_and_offers(update_type):
+	# update_type refers to either requests or offers
+	updates = None
+	if update_type == 'requests':
+		updates = Request.query.all()
+
+	if update_type == 'offers':
+		updates = Offer.query.all()
+	
+	returned_updates = []
+
+	for update in updates:
+
+		data = {
+			"title": update.title,
+			"description": update.description,
+			"start_date": update.start_date,
+			"end_date": update.end_date,
+			"published_on": update.published_on,
+			"cat_sitting_mode": update.cat_sitting_mode.name
+		}
+		if update_type == 'requests':
+			data['location'] = update.cat_keeper.get_location()
+		if update_type == 'offers':
+			data['location'] = update.cat_sitter.get_location()
+
+		if update.photo_1:
+			data['photo_1'] = url_for('static', filename='update_imgs/' + update.photo_1)
+		if update.photo_2:
+			data['photo_2'] = url_for('static', filename='update_imgs/' + update.photo_2)
+		if update.photo_3:
+			data['photo_3'] = url_for('static', filename='update_imgs/' + update.photo_3)
+
+		returned_updates.append(data)
+
+	return jsonify(returned_updates)
 
 
 

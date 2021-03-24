@@ -4,6 +4,7 @@ from rentacat import db, login_manager, app
 from flask_login import UserMixin
 from geoalchemy2 import Geometry
 from geoalchemy2.elements import WKTElement
+from geoalchemy2.shape import to_shape
 
 
 #* RELATIONSHIPS
@@ -75,6 +76,20 @@ class Profile(db.Model):
 
 	def __repr__(self):
 		return f"Profile('{self.name}', '{self.profile_image}')"
+
+	def get_latitude(self):
+		point = to_shape(self.profile_location)
+		return point.y
+	
+	def get_longitude(self):
+		point = to_shape(self.profile_location)
+		return point.x
+
+	def get_location(self):
+		return {
+			"lat": self.get_latitude(),
+			"lng": self.get_longitude()
+		}
 
 	@staticmethod
 	def point_rep(latitude, longitude):
