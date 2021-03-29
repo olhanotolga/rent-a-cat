@@ -3,6 +3,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
+from flask_cors import CORS
 # from sqlalchemy import create_engine
 from sqlalchemy import event
 from sqlalchemy.sql import select
@@ -17,6 +18,7 @@ app.config['SPATIALITE_LIBRARY_PATH'] = '/usr/local/lib/mod_spatialite.dylib'
 
 app.config['GOOGLE_MAPS_API_KEY'] = os.environ.get('API_KEY')
 
+CORS(app)
 
 db = SQLAlchemy(app)
 

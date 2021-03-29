@@ -79,11 +79,11 @@ class Profile(db.Model):
 
 	def get_latitude(self):
 		point = to_shape(self.profile_location)
-		return point.y
+		return point.x
 	
 	def get_longitude(self):
 		point = to_shape(self.profile_location)
-		return point.x
+		return point.y
 
 	def get_location(self):
 		return {

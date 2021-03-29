@@ -288,8 +288,8 @@ def new_request():
 ####*#########*####
 ### *** API *** ###
 ####*#########*####
-@app.route("/api/updates/<string:update_type>", methods=['GET'])
-def get_requests_and_offers(update_type):
+@app.route("/api/<string:username>/updates/<string:update_type>", methods=['GET'])
+def get_requests_and_offers(username, update_type):
 	# update_type refers to either requests or offers
 	updates = None
 	if update_type == 'requests':
@@ -298,7 +298,11 @@ def get_requests_and_offers(update_type):
 	if update_type == 'offers':
 		updates = Offer.query.all()
 	
-	returned_updates = []
+	returned_response = {
+		"data": []
+	}
+
+	# returned = { data: [{}, {}, {}, {}], location: {} }
 
 	for update in updates:
 
@@ -322,9 +326,14 @@ def get_requests_and_offers(update_type):
 		if update.photo_3:
 			data['photo_3'] = url_for('static', filename='update_imgs/' + update.photo_3)
 
-		returned_updates.append(data)
+		returned_response["data"].append(data)
 
-	return jsonify(returned_updates)
+	curr_user = User.query.filter_by(username=username).first()
+	user_location = curr_user.profile.get_location()
+
+	returned_response["location"] = user_location
+
+	return jsonify(returned_response)
 
 
 
@@ -332,6 +341,8 @@ def get_requests_and_offers(update_type):
 @app.route("/view")
 @login_required
 def view():
+	username = current_user.username
+
 	profile_types = {
 		'CatKeeper': 'Cat Keeper',
 		'CatSitter': 'Cat Sitter'
@@ -348,6 +359,13 @@ def view():
 	
 	requests = current_user.profile.requests
 	offers = current_user.profile.offers
+
+	default_update_type = None
+	if profile_type == "Cat Keeper":
+		default_updates_type = "offers"
+	elif profile_type == "Cat Sitter":
+		default_updates_type = "requests"
+
 	# requests = Request.query.filter_by(cat_keeper=current_profile).order_by(Request.date_posted.desc())
 	# offers = Offer.query.filter_by(cat_sitter=current_profile).order_by(Offer.date_posted.desc())
 
@@ -355,7 +373,7 @@ def view():
 	map_key = app.config['GOOGLE_MAPS_API_KEY']
 	map_string = "https://maps.googleapis.com/maps/api/js?key=" + map_key + "&callback=initMap&libraries=places&v=weekly"
 
-	return render_template("view.html", title="View", h2=f"View {other_type}s nearby", script=script, map_string=map_string, requests=requests, offers=offers)
+	return render_template("view.html", title="View", h2=f"View {other_type}s nearby", script=script, map_string=map_string, requests=requests, offers=offers, updates=default_updates_type, username=username)
 
 
 @app.errorhandler(404)
