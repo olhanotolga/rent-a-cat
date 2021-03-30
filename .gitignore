@@ -16,5 +16,6 @@ build/
 __pycache__/
 instance/
 .webassets-cache
+*.db
 
 # rac-notes/

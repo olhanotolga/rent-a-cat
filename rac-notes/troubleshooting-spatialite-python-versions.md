@@ -64,7 +64,7 @@ if command -v pyenv 1>/dev/null 2>&1; then
 fi
 ```
 
-(the command from the Homebrew log did **NOT** work: `if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi`)
+(this command from the Homebrew log did **NOT** work (I used the one above!): `if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi`)
 
 #### Managing Python versions in a local virtual environment
 
